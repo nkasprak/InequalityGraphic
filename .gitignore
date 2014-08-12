@@ -34,3 +34,7 @@ Icon
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+
+jquery-ui-1.10.3/
+_notes/
+dwsync.xml
