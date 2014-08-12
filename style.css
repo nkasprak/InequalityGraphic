@@ -52,6 +52,14 @@ body {
 	bottom:0px;
 }
 
+#outermost #slideSelectArea #selectSlide0 {
+	width:8%;
+}
+
+#outermost #slideSelectArea #selectSlide5 {
+	width:8%;
+}
+
 #outermost #slideSelectArea .slideSelector .inner {
 	margin:0px;
 	padding:0px;
