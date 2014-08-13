@@ -265,6 +265,13 @@ h1,h2,h3,h4,h5,h6 {
 	outline:0px;
 }
 
+.chartSlide .exploreSelector {
+	position:absolute;
+	top:0px;
+	left:5px;	
+	display:none;
+}
+
 .chartSlide .chartDescHeader {
 	position:relative;
 	display:block;

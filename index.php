@@ -39,12 +39,22 @@
 		"Share of after-tax income",
 		"Average share of income owed in federal taxes"
 	);
+	function outputExploreSelector() {
+		global $titles; ?>
+		<select class="exploreSelector">
+        	<?php for ($i=1;$i<=4;$i++) : ?>
+            <option value="<?php echo $i;?>"><?php echo $titles[$i];?></option>
+            <?php endfor; ?>
+        </select>
+	<?php }; 
 	for ($i=1;$i<=4;$i++) : ?>
     <div id="slide<?php echo $i; ?>" class="chartSlide">
+    	 <?php outputExploreSelector(); ?>
     	<div class="slideTextMargin">
         	<div class="chartDescHeader" id="slide<?php echo $i;?>title">
             	<div class="animateInner"></div>
             </div>
+           
            	<div class="chartDescBody" id="slide<?php echo $i;?>body"><div class="animateInner"></div></div>
             <p>&nbsp;</p>
             <div class="sliderContainer">
@@ -61,7 +71,13 @@
 	    </div> <!-- end slideTextMargin-->
     </div> <!--end slide <?php echo $i;?> -->
     <?php endfor; ?>
-    
+    <div id="slide5" class="chartSlide">
+    <?php outputExploreSelector(); ?>
+    <div class="chartDescBody" id="slide5body">
+    <p>&nbsp;</p>
+    	<p><strong>Explore the data</strong></p>
+    </div>    
+    </div>
     <div id="popup">
     	<div id="textDiv"></div>
         <div id="closePopup">Continue</div>

@@ -14,6 +14,21 @@ mainGraphic.chartDrawn[2] = false;
 mainGraphic.chartDrawn[3] = false;
 mainGraphic.chartDrawn[4] = false;
 mainGraphic.playing = false;
+mainGraphic.mode = "story";
+
+mainGraphic.enterExploreMode = function() {
+	mainGraphic.mode = "explore";
+	hideBlurbs();
+	$("#playPauseArea, #restartArea").hide();
+	$(".exploreSelector").show();
+}
+
+mainGraphic.enterStoryMode = function() {
+	mainGraphic.mode = "story";
+	showBlurbs();	
+	$("#playPauseArea, #restartArea").show();
+	$(".exploreSelector").hide();
+}
 
 
 mainGraphic.textSnippets = [];
@@ -277,22 +292,31 @@ var eventSequence = [	//slide, leftYear, rightYear, seconds
 						[4,1979,2010,3,showsOver]
 						
 					];
-
-$(".slideSelector").click(function () {
+					
+$("#selectSlide0, #selectSlide5").click(function () {
 	if (!mainGraphic.playing) {
-    this.slideClicked = this.id.slice(11);
-    changeSlide(this.slideClicked);
-	hideBlurbs();
+		this.slideClicked = this.id.slice(11);
+		changeSlide(this.slideClicked);
+		hideBlurbs();
 	}
+});
+
+$(".exploreSelector").change(function() {
+	var slide = $(this).val();
+	changeSlide(slide);
 });
 
 function changeSlide(slideClicked) {
 	if ($("#slide" + slideClicked).is(":visible")) {
 		
 	} else {
+		
 		$(".chartSlide").fadeOut(200);
-		$('.slideSelector').removeClass("selected");
-		$("#selectSlide" + slideClicked).addClass("selected");
+		if (mainGraphic.mode == "story") {
+			$('.slideSelector').removeClass("selected");
+			$("#selectSlide" + slideClicked).addClass("selected");
+		}
+		if (slideClicked==5) mainGraphic.enterExploreMode();
 		$("#slide" + slideClicked).fadeIn(200, function () {
 			var chartNumber = this.id.slice(5);
 			if (mainGraphic.chartDrawn[chartNumber] == false) {
@@ -328,9 +352,11 @@ function hideBlurbs() {
 }
 
 function showBlurbs() {
-	$(".chartDescHeader, .chartDescBody").show();
-	$(".vertical_divider").css("top","270px");
-	$(".circleSelector").css("visibility","visible");
+	if (mainGraphic.mode == "story") {
+		$(".chartDescHeader, .chartDescBody").show();
+		$(".vertical_divider").css("top","270px");
+		$(".circleSelector").css("visibility","visible");
+	}
 }
 
 var ops = [];
@@ -696,8 +722,8 @@ ops[4].right = {
 			
 			slideText(mainGraphic.textSnippets[mainGraphic.textConfig[chartNumber][yearToUse][0]],"#slide" + chartNumber + "title");
 			slideText(mainGraphic.textSnippets[mainGraphic.textConfig[chartNumber][yearToUse][1]],"#slide" + chartNumber + "body");
-			$(".slideSelector, .circleSelector").removeClass("selected");
-			$("#selectSlide" + chartNumber).addClass("selected");
+			//$(".slideSelector, .circleSelector").removeClass("selected");
+			//$("#selectSlide" + chartNumber).addClass("selected");
 			$("#circle" + mainGraphic.textConfig[chartNumber][yearToUse][2]).addClass("selected");
 			
 			//$("#slide" + chartNumber + "body").html(mainGraphic.textSnippets[mainGraphic.textConfig[chartNumber][yearToUse][1]]);
