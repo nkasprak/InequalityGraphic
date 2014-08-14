@@ -37,7 +37,8 @@
 		"Percentage change in after tax income since 1979",
 		"Average after-tax income, in 2010 dollars",
 		"Share of after-tax income",
-		"Average share of income owed in federal taxes"
+		"Average share of income owed in federal taxes",
+		""
 	);
 	function outputExploreSelector() {
 		global $titles; ?>
@@ -47,9 +48,9 @@
             <?php endfor; ?>
         </select>
 	<?php }; 
-	for ($i=1;$i<=4;$i++) : ?>
+	for ($i=1;$i<=5;$i++) : ?>
     <div id="slide<?php echo $i; ?>" class="chartSlide">
-    	 <?php outputExploreSelector(); ?>
+    	<?php if ($i==5) outputExploreSelector(); ?>
     	<div class="slideTextMargin">
         	<div class="chartDescHeader" id="slide<?php echo $i;?>title">
             	<div class="animateInner"></div>
@@ -71,13 +72,13 @@
 	    </div> <!-- end slideTextMargin-->
     </div> <!--end slide <?php echo $i;?> -->
     <?php endfor; ?>
-    <div id="slide5" class="chartSlide">
+    <!--<div id="slide5" class="chartSlide">
     <?php outputExploreSelector(); ?>
     <div class="chartDescBody" id="slide5body">
     <p>&nbsp;</p>
     	<p><strong>Explore the data</strong></p>
     </div>    
-    </div>
+    </div>-->
     <div id="popup">
     	<div id="textDiv"></div>
         <div id="closePopup">Continue</div>

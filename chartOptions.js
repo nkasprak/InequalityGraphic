@@ -2,6 +2,7 @@
 
 var getChartOptionsObj = function() {
 	var ops = [];
+	
 	ops[1] = {};
 	ops[1].left = {
 		chartWidth: 403,

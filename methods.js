@@ -133,6 +133,31 @@ mainGraphic.changeSlide = function(slideClicked) {
 	}
 };
 
+//Edit the slider objects (created by jQuery UI) a bit to control styling.
+mainGraphic.styleSliderHandles = function(chartIndex) {
+	//Get slider handles of current slide
+	var sliderHandles = $("#slide" + chartIndex + "slider .ui-slider-handle");
+	if (sliderHandles.length == 1) {
+		var mainSlider = 0;
+	} else {
+		var mainSlider = 1;
+		var otherSlider = 0;
+		
+		//add CSS ID
+		$(sliderHandles[otherSlider]).attr("id", "slide" + chartIndex + "slider_lowerHandle");
+		
+		//add inner divs
+		$(sliderHandles[otherSlider]).html('<div class="lowerSliderHandle sliderHandle" id="chart' + chartIndex + '_lowerSliderHandle"><div class="sliderLegendBox"><div id="chart' + chartIndex + '_lowerSliderText" class="sliderText">' + mainGraphic.minYear + '</div></div>');
+	
+	}
+	
+	//add CSS ID
+	$(sliderHandles[mainSlider]).attr("id", "slide" + chartIndex + "slider_upperHandle");
+		
+	//add inner divs
+	$(sliderHandles[mainSlider]).html('<div class="upperSliderHandle sliderHandle" id="chart' + chartIndex + '_upperSliderHandle"><div class="sliderLegendBox"></div><div id="chart' + chartIndex + '_upperSliderText" class="sliderText">' + mainGraphic.maxYear + '</div></div>');
+}
+
 //Hide all the text that would otherwise appear (for explore mode)
 mainGraphic.hideBlurbs = function() {
 	$(".chartDescHeader, .chartDescBody").hide();
@@ -232,6 +257,10 @@ mainGraphic.enterStoryMode = function() {
 	$(".exploreSelector").hide();
 };
 
+mainGraphic.assignData = function(ui,chartNumber) {
+	
+};
+
 //Draw a new data point. This function is called sliderChangeFunction because that's when it runs,
 //but it does a whole lot.
 mainGraphic.sliderChangeFunction = function (event, ui, chartNumber) {
@@ -260,9 +289,14 @@ mainGraphic.sliderChangeFunction = function (event, ui, chartNumber) {
 	
 	try {
 		
-		//Switch to the correct slide
 		chartNumber = chartNumber * 1;
-		mainGraphic.changeSlide(chartNumber);
+		
+		var chartToDraw = chartNumber;
+		
+		if (mainGraphic.mode=="explore") {
+			chartToDraw = 5;
+		}
+		mainGraphic.changeSlide(chartToDraw);
 		
 		//This might be false if we haven't drawn a chart for this slide yet, but is henceforth true
 		mainGraphic.chartDrawn[chartNumber] = true;
@@ -312,16 +346,16 @@ mainGraphic.sliderChangeFunction = function (event, ui, chartNumber) {
 		ops[chartNumber].right.yMin = mainGraphic.customMin;
 
 		//If we haven't created the object yet, create it
-		if (typeof (mainGraphic[chartNumber]) == "undefined") mainGraphic[chartNumber] = {};
+		if (typeof (mainGraphic[chartToDraw]) == "undefined") mainGraphic[chartToDraw] = {};
 
 		//If we haven't created the left chart yet, create it
-		if (mainGraphic[chartNumber].left) {} else {
-			mainGraphic[chartNumber].left = new Raphael.fn.barchart(chartData, ops[chartNumber].left);
+		if (mainGraphic[chartToDraw].left) {} else {
+			mainGraphic[chartToDraw].left = new Raphael.fn.barchart(chartData, ops[chartNumber].left);
 		}
 
 		//If we haven't created the right chart yet, create it
-		if (mainGraphic[chartNumber].right) {} else {
-			mainGraphic[chartNumber].right = new Raphael.fn.barchart(chartData2, ops[chartNumber].right);
+		if (mainGraphic[chartToDraw].right) {} else {
+			mainGraphic[chartToDraw].right = new Raphael.fn.barchart(chartData2, ops[chartNumber].right);
 		}
 
 		var slideMin = mainGraphic.minYear;
@@ -339,16 +373,16 @@ mainGraphic.sliderChangeFunction = function (event, ui, chartNumber) {
 		var rightPixels = rightPercent * $("#slide" + chartNumber + "slider").width() - 40;
 	 
 		if (!ui.values) {
-			$("#chart" + chartNumber + "_upperSliderText").text(ui.value);
+			$("#chart" + chartToDraw + "_upperSliderText").text(ui.value);
 		} else {
-			$("#chart" + chartNumber + "_lowerSliderText").text(ui.values[0]);
-			$("#chart" + chartNumber + "_upperSliderText").text(ui.values[1]);
+			$("#chart" + chartToDraw + "_lowerSliderText").text(ui.values[0]);
+			$("#chart" + chartToDraw + "_upperSliderText").text(ui.values[1]);
 		}
 		
 		mainGraphic.tryDraw(
-			[mainGraphic[chartNumber].left, mainGraphic[chartNumber].right], 
-			[mainGraphic.canvases["slide" + chartNumber + "left"], mainGraphic.canvases["slide" + chartNumber + "right"]], 
-			"slide" + chartNumber, 
+			[mainGraphic[chartToDraw].left, mainGraphic[chartToDraw].right], 
+			[mainGraphic.canvases["slide" + chartToDraw + "left"], mainGraphic.canvases["slide" + chartToDraw + "right"]], 
+			"slide" + chartToDraw, 
 			[chartData.data, chartData2.data], 
 			[ops[chartNumber].left, ops[chartNumber].right]
 		);
@@ -357,5 +391,5 @@ mainGraphic.sliderChangeFunction = function (event, ui, chartNumber) {
 	} catch (ex) {
 		console.log(ex);
 	}
-}
+};
 	

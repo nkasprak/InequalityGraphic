@@ -48,44 +48,16 @@ try {
 		mainGraphic.textSliding = {};
 		mainGraphic.textSlidingTimer = {};
 		
-		//Edit the slider objects (created by jQuery UI) a bit to control styling.
-		var sliderHandles;
-		for (chartIndex = 1; chartIndex <= 4; chartIndex++) {
-		
-			//Get slider handles of current slide
-			sliderHandles = $("#slide" + chartIndex + "slider .ui-slider-handle");
-			
-			if (sliderHandles.length == 1) {
-				var mainSlider = 0;
-			} else {
-				var mainSlider = 1;
-				var otherSlider = 0;
-				
-				//add CSS ID
-				$(sliderHandles[otherSlider]).attr("id", "slide" + chartIndex + "slider_lowerHandle");
-				
-				//add inner divs
-				$(sliderHandles[otherSlider]).html('<div class="lowerSliderHandle sliderHandle" id="chart' + chartIndex + '_lowerSliderHandle"><div class="sliderLegendBox"><div id="chart' + chartIndex + '_lowerSliderText" class="sliderText">' + mainGraphic.minYear + '</div></div>');
-			
-			}
-			
-			//add CSS ID
-			$(sliderHandles[mainSlider]).attr("id", "slide" + chartIndex + "slider_upperHandle");
-				
-			//add inner divs
-			$(sliderHandles[mainSlider]).html('<div class="upperSliderHandle sliderHandle" id="chart' + chartIndex + '_upperSliderHandle"><div class="sliderLegendBox"></div><div id="chart' + chartIndex + '_upperSliderText" class="sliderText">' + mainGraphic.maxYear + '</div></div>');
+		for (var chartIndex = 1; chartIndex <= 5; chartIndex++) {
+			mainGraphic.styleSliderHandles(chartIndex);
 		}
 		
 		//Stores references to the Raphael canvases.
 		mainGraphic.canvases = {};
-		mainGraphic.canvases["slide1left"] = Raphael("slide1Canvas", 403, 252);
-		mainGraphic.canvases["slide1right"] = Raphael("slide1RightCanvas", 81, 252);
-		mainGraphic.canvases["slide2left"] = Raphael("slide2Canvas", 403, 252);
-		mainGraphic.canvases["slide2right"] = Raphael("slide2RightCanvas", 81, 252);
-		mainGraphic.canvases["slide3left"] = Raphael("slide3Canvas", 403, 252);
-		mainGraphic.canvases["slide3right"] = Raphael("slide3RightCanvas", 81, 252);
-		mainGraphic.canvases["slide4left"] = Raphael("slide4Canvas", 403, 252);
-		mainGraphic.canvases["slide4right"] = Raphael("slide4RightCanvas", 81, 252);
+		for (chartIndex = 1;chartIndex <=5;chartIndex++) {
+			mainGraphic.canvases["slide" + chartIndex + "left"] = Raphael("slide" + chartIndex + "Canvas", 403, 252);
+			mainGraphic.canvases["slide" + chartIndex + "right"] = Raphael("slide" + chartIndex + "RightCanvas", 81, 252);
+		}
 		
 		
 		//Assign some handlers
@@ -109,9 +81,14 @@ try {
 		});
 		
 		$(".exploreSelector").change(function() {
-			var slide = $(this).val();
-			mainGraphic.changeSlide(slide);
+			mainGraphic.mode = "explore";
+			var chartNumber = $(this).val();
+			console.log(mainGraphic.sliderConfigs[chartNumber]);
+			$($("#slide5slider").find()).remove();
+			$("#slide5slider").slider(mainGraphic.sliderConfigs[chartNumber]);
 		});
+		
+		$("#slide5slider").slider(mainGraphic.sliderConfigs[1]);
 		
 		$("#playPauseArea img, #restartArea img").hover(function() {
 			$(this).attr("src",$(this).attr("src").replace("light","dark"));
