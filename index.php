@@ -94,7 +94,14 @@
 <script type="text/javascript" src = "raphael.barchart.js"></script>
 <script type="text/javascript" src="jquery-ui-1.10.3/js/jquery-1.9.1.js"></script>
 <script type="text/javascript" src="jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script type="text/javascript" src="data.js"></script>
+<script type="text/javascript" src="text.js"></script>
+<script type="text/javascript" src="events.js"></script>
+<script type="text/javascript" src="chartOptions.js"></script>
+<script type="text/javascript" src="methods.js"></script>
+<script type="text/javascript" src="sliders.js"></script>
 <script type="text/javascript" src="main.js"></script>
+
 
 
 </body>
