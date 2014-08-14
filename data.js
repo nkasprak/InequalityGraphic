@@ -142,9 +142,10 @@ cbodata.taxRate[2009]=[0.01,0.067,0.111,0.15,0.232,0.173,0.187,0.211,0.242,0.289
 cbodata.taxRate[2010]=[0.015,0.072,0.115,0.156,0.24,0.181,0.193,0.216,0.249,0.294];
 
 
-var assignData = function(ui) {
-	return {
-		1: {
+var assignData = function(ui,chartNumber) {
+	switch (chartNumber) {
+		case 1:
+		return {
 			data1: {
 				data: [
 					{
@@ -178,30 +179,34 @@ var assignData = function(ui) {
 			},
 			customMax: 3.2,
 			customMin: -0.1
-		},
-		2: {
+		};
+		break;
+		case 2: 
+		return {
 			data1:  {
-				data: [{
-					series: [cbodata.growthIncome[ui.values[0]][0],
-						cbodata.growthIncome[ui.values[0]][1],
-						cbodata.growthIncome[ui.values[0]][2],
-						cbodata.growthIncome[ui.values[0]][3],
-						cbodata.growthIncome[ui.values[0]][4]
-					],
-					bar_ops: {
-						color: "#aac8e0"
+				data: [
+					{
+						series: [cbodata.growthIncome[ui.values[0]][0],
+							cbodata.growthIncome[ui.values[0]][1],
+							cbodata.growthIncome[ui.values[0]][2],
+							cbodata.growthIncome[ui.values[0]][3],
+							cbodata.growthIncome[ui.values[0]][4]
+						],
+						bar_ops: {
+							color: "#aac8e0"
+						}
+					}, {
+						series: [cbodata.growthIncome[ui.values[1]][0],
+							cbodata.growthIncome[ui.values[1]][1],
+							cbodata.growthIncome[ui.values[1]][2],
+							cbodata.growthIncome[ui.values[1]][3],
+							cbodata.growthIncome[ui.values[1]][4]
+						],
+						bar_ops: {
+							color: "#3e81b6"
+						}
 					}
-				}, {
-					series: [cbodata.growthIncome[ui.values[1]][0],
-						cbodata.growthIncome[ui.values[1]][1],
-						cbodata.growthIncome[ui.values[1]][2],
-						cbodata.growthIncome[ui.values[1]][3],
-						cbodata.growthIncome[ui.values[1]][4]
-					],
-					bar_ops: {
-						color: "#3e81b6"
-					}
-				}],
+				],
 				labels: ["Bottom 20%", "Second 20%", "Middle 20%", "Fourth 20%", "Top 20%"]
 			},
 			data2: {
@@ -221,9 +226,10 @@ var assignData = function(ui) {
 			},	  
 			customMax: 1373700,
 			custonMin: 0
-		},
-		
-		3: { 
+		};
+		break;
+		case 3: 
+		return { 
 			data1: {
 				data: [{
 					series: [cbodata.shareIncome[ui.values[0]][0],
@@ -265,8 +271,10 @@ var assignData = function(ui) {
 			},
 			customMax: .52,
 			customMin: 0
-		},
-		4: {
+		};
+		break;
+		case 4: 
+		return {
 			data1: {
 				data: [{
 					series: [cbodata.taxRate[ui.values[0]][0],
@@ -309,8 +317,7 @@ var assignData = function(ui) {
 			customMax: .4,
 			customMin: 0,
 		}
-
-		
+		break;
 	}
 }
 
