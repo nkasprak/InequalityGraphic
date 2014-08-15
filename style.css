@@ -176,7 +176,7 @@ body {
 	margin-bottom:1em;
 }
 
-#outermost #slide0 .beginStory, #outermost #popup #closePopup {
+.redButton {
 	padding:5px;
 	background-color:#b9292f;
 	color:#fff;
@@ -188,7 +188,7 @@ body {
 	cursor:pointer;
 }
 
-#outermost #slide0 .beginStory:hover {
+.redButton:hover {
 	text-decoration:underline;	
 }
 
@@ -269,7 +269,6 @@ h1,h2,h3,h4,h5,h6 {
 	position:absolute;
 	top:0px;
 	left:5px;	
-	display:none;
 }
 
 .chartSlide .chartDescHeader {

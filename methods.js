@@ -103,13 +103,10 @@ mainGraphic.changeSlide = function(slideClicked) {
 		//Fade out all the slides.
 		$(".chartSlide").fadeOut(200);
 		
-		//Change the tabs at the top to reflect the slide we're in; for now,
-		//only for story mode, since in explore mode we want to pretend we're
-		//always in the last tab, but I may change how this works later.
-		if (mainGraphic.mode == "story") {
-			$('.slideSelector').removeClass("selected");
-			$("#selectSlide" + slideClicked).addClass("selected");
-		}
+		//Change the tabs at the top to reflect the slide we're in
+		$('.slideSelector').removeClass("selected");
+		$("#selectSlide" + slideClicked).addClass("selected");
+		
 		
 		//Last tab is for explore mode.
 		if (slideClicked==5) {
@@ -131,6 +128,7 @@ mainGraphic.changeSlide = function(slideClicked) {
 			$(".exploreSelector").trigger("change");
 		}
 	}
+	mainGraphic.activeSlide = slideClicked;
 };
 
 mainGraphic.initializeChartAfterSwitch = function(slideNumber) {
@@ -177,7 +175,7 @@ mainGraphic.hideBlurbs = function() {
 //Unhide that text
 mainGraphic.showBlurbs = function() {
 	if (mainGraphic.mode == "story") {
-		$(".chartDescHeader, .chartDescBody").show();
+		$(".chartDescHeader, .chartDescBody").slideDown(600);
 		$(".vertical_divider").css("top","270px");
 	}
 };
@@ -207,18 +205,11 @@ mainGraphic.tryDraw = function(barChartObjects, barChartCanvases, timerID, dataA
 			//loop through the charts again...
 			for (var barChartIndex = 0; barChartIndex < barChartObjects.length; barChartIndex++) {
 				
-				
-				
 				//Update the chart's underlying data...
 				barChartObjects[barChartIndex].updateData(dataArrs[barChartIndex], dataOptionsArrs[barChartIndex]);
 				
 				//and redraw it.
-				
-				//console.log(barChartCanvases[barChartIndex]);
-				
 				barChartObjects[barChartIndex].draw(barChartCanvases[barChartIndex], 200);
-				
-				
 				
 			}
 		} else {
@@ -254,8 +245,49 @@ mainGraphic.showPlay = function() {
 	$("#outermost #playPauseArea, #outermost #restartArea").css("visibility","visible");
 };
 
+//Hit play button
+mainGraphic.hitPlay = function() {
+	$("#playPauseArea img").attr("src",$("#playPauseArea img").attr("src").replace("pause","play"));
+	clearTimeout(mainGraphic.mainGlobalEventTimer);
+	mainGraphic.playing = false;
+	mainGraphic.returnToEvent = mainGraphic.eventIndex;
+	$(".chartDescHeader, .chartDescBody").css("opacity",0.5);
+};
+
+//Hit pause button
+mainGraphic.hitPause = function() {
+	$(".chartDescHeader, .chartDescBody").css("opacity",1);
+	var returnToChart =eventSequence[mainGraphic.returnToEvent][0];
+	var currentChart = mainGraphic.activeSlide;
+	if (returnToChart == currentChart) {
+		if ($("#slide" + currentChart + "slider a").length > 1) {
+			var yearToUse = $("#slide" + currentChart + "slider").slider("option","values")[1];	
+		} else {
+			var yearToUse = $("#slide" + currentChart + "slider").slider("option","value");
+		}
+		for (var i = 0;i<eventSequence.length;i++) {
+			if (eventSequence[i][2] == yearToUse && eventSequence[i][0] == currentChart) {
+				mainGraphic.eventIndex = i;
+				break;
+			}
+		}
+	} else {
+		for (var i = 0;i<eventSequence.length;i++) {
+			if (eventSequence[i][0] == currentChart) {
+				mainGraphic.eventIndex = i;
+				break;
+			}
+		}
+	}
+	$("#playPauseArea img").attr("src",$("#playPauseArea img").attr("src").replace("play","pause"));
+	mainGraphic.event_fire(eventSequence[mainGraphic.eventIndex]);
+	mainGraphic.playing = true;	
+	mainGraphic.showBlurbs();
+}
+
 //Reset everything
 mainGraphic.showsOver = function() {
+	$(".chartDescHeader, .chartDescBody").css("opacity",1);
 	mainGraphic.popupsShown = [];
 	mainGraphic.eventIndex=0;
 	mainGraphic.pauseEverything();
@@ -267,20 +299,16 @@ mainGraphic.enterExploreMode = function() {
 	mainGraphic.mode = "explore";
 	mainGraphic.hideBlurbs();
 	$("#playPauseArea, #restartArea").hide();
-	$(".exploreSelector").show();
 };
 
 //Switch to story mode
 mainGraphic.enterStoryMode = function() {
 	mainGraphic.mode = "story";
-	mainGraphic.showBlurbs();	
-	$("#playPauseArea, #restartArea").show();
-	$(".exploreSelector").hide();
+	$("#restartArea").trigger("click");
+	$("#outermost #restartArea").show();
 };
 
-mainGraphic.assignData = function(ui,chartNumber) {
-	
-};
+
 
 //Draw a new data point. This function is called sliderChangeFunction because that's when it runs,
 //but it does a whole lot.

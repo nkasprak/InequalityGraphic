@@ -9,6 +9,8 @@ try {
 		mainGraphic.chartDrawn[3] = false;
 		mainGraphic.chartDrawn[4] = false;
 		
+		mainGraphic.activeSlide = 0;
+		
 		//The graphic is initially paused.
 		mainGraphic.playing = false;
 		
@@ -72,12 +74,23 @@ try {
 			}
 		});
 					
-		$("#selectSlide0, #selectSlide5").click(function () {
+		$(".slideSelector").click(function () {
+			this.slideClicked = this.id.slice(11);
+			if (mainGraphic.mode == "explore" && (this.slideClicked != 0 && this.slideClicked != 5)) {
+				return false;
+			}
+			
 			if (!mainGraphic.playing) {
-				this.slideClicked = this.id.slice(11);
 				mainGraphic.changeSlide(this.slideClicked);
 				mainGraphic.hideBlurbs();
 			}
+			if (this.slideClicked == 0) {
+				mainGraphic.enterStoryMode();	
+			}
+		});
+		
+		$("#exploreButton").click(function() {
+			$("#selectSlide5").trigger("click");
 		});
 		
 		$(".exploreSelector").change(function() {
@@ -117,16 +130,18 @@ try {
 		$("#playPauseArea img, #restartArea img").mouseout(function() {
 			$(this).attr("src",$(this).attr("src").replace("dark","light"));
 		});
+		
+		
 		$("#playPauseArea img").click(function() {
 			if (mainGraphic.playing==true) {
-				$(this).attr("src",$(this).attr("src").replace("pause","play"));
-				clearTimeout(mainGraphic.mainGlobalEventTimer);
-				mainGraphic.playing = false;
+				
+				//Pause
+				mainGraphic.hitPlay();
+				
 			} else {
-				$(this).attr("src",$(this).attr("src").replace("play","pause"));
-				mainGraphic.event_fire(eventSequence[mainGraphic.eventIndex]);
-				mainGraphic.playing = true;	
-				mainGraphic.showBlurbs();
+				
+				//Play
+				mainGraphic.hitPause();
 			}
 			
 		});
