@@ -112,25 +112,35 @@ mainGraphic.changeSlide = function(slideClicked) {
 		}
 		
 		//Last tab is for explore mode.
-		if (slideClicked==5) mainGraphic.enterExploreMode();
+		if (slideClicked==5) {
+			mainGraphic.enterExploreMode();
+		}
 		
 		//Fade in the correct slide.
 		$("#slide" + slideClicked).fadeIn(200, function () {
-			var chartNumber = this.id.slice(5);
 			
 			//If we haven't drawn this slide's chart yet, draw it.
-			if (mainGraphic.chartDrawn[chartNumber] == false) {
+			if (mainGraphic.chartDrawn[slideClicked] == false) {
 				
-				var ui = {};
+				mainGraphic.initializeChartAfterSwitch(slideClicked);
 				
-				//Check number of handles in chart
-				if ($("#slide" + slideClicked + "slider a").length > 1) ui.values = [mainGraphic.minYear, mainGraphic.maxYear];
-				else ui.value = mainGraphic.minYear;
-				
-				mainGraphic.sliderChangeFunction(null, ui, this.id.slice(5));
 			}
 		});
+		
+		if (slideClicked==5) {
+			$(".exploreSelector").trigger("change");
+		}
 	}
+};
+
+mainGraphic.initializeChartAfterSwitch = function(slideNumber) {
+	var ui = {};
+			
+	//Check number of handles in chart
+	if ($("#slide" + slideNumber + "slider a").length > 1) ui.values = [mainGraphic.minYear, mainGraphic.maxYear];
+	else ui.value = mainGraphic.minYear;
+	
+	mainGraphic.sliderChangeFunction(null, ui, slideNumber);
 };
 
 //Edit the slider objects (created by jQuery UI) a bit to control styling.
@@ -175,7 +185,11 @@ mainGraphic.showBlurbs = function() {
 //Try to update the chart with a new data point.
 mainGraphic.tryDraw = function(barChartObjects, barChartCanvases, timerID, dataArrs, dataOptionsArrs) {
 	try {
-		clearTimeout(mainGraphic.timers[timerID]);
+		try {
+			clearTimeout(mainGraphic.timers[timerID]);
+		} catch (ex) {
+			console.log("no timer: " + ex);	
+		}
 		
 		//In order to check if anything's in motion, we'll assume no initially...
 		var inMotion = false;
@@ -193,11 +207,18 @@ mainGraphic.tryDraw = function(barChartObjects, barChartCanvases, timerID, dataA
 			//loop through the charts again...
 			for (var barChartIndex = 0; barChartIndex < barChartObjects.length; barChartIndex++) {
 				
+				
+				
 				//Update the chart's underlying data...
 				barChartObjects[barChartIndex].updateData(dataArrs[barChartIndex], dataOptionsArrs[barChartIndex]);
 				
 				//and redraw it.
+				
+				//console.log(barChartCanvases[barChartIndex]);
+				
 				barChartObjects[barChartIndex].draw(barChartCanvases[barChartIndex], 200);
+				
+				
 				
 			}
 		} else {
@@ -208,7 +229,7 @@ mainGraphic.tryDraw = function(barChartObjects, barChartCanvases, timerID, dataA
 			}, 20);
 		}
 	} catch (ex) {
-		console.log("Error in mainGraphic.tryDraw(): " + ex);	
+		console.log(ex);	
 	}
 };
 
@@ -325,8 +346,10 @@ mainGraphic.sliderChangeFunction = function (event, ui, chartNumber) {
 		}
 		
 		//Slide the correct text in
-		slideText(mainGraphic.textSnippets[mainGraphic.textConfig[chartNumber][yearToUse][0]],"#slide" + chartNumber + "title");
-		slideText(mainGraphic.textSnippets[mainGraphic.textConfig[chartNumber][yearToUse][1]],"#slide" + chartNumber + "body");
+		if (mainGraphic.mode != "explore") {
+			slideText(mainGraphic.textSnippets[mainGraphic.textConfig[chartNumber][yearToUse][0]],"#slide" + chartNumber + "title");
+			slideText(mainGraphic.textSnippets[mainGraphic.textConfig[chartNumber][yearToUse][1]],"#slide" + chartNumber + "body");
+		}
 		
 		if (!ui.values) $("#slide" + chartNumber + "slider").slider('value',ui.value);
 		else $("#slide" + chartNumber + "slider").slider('values',[ui.values[0],ui.values[1]]);
@@ -378,6 +401,7 @@ mainGraphic.sliderChangeFunction = function (event, ui, chartNumber) {
 			$("#chart" + chartToDraw + "_lowerSliderText").text(ui.values[0]);
 			$("#chart" + chartToDraw + "_upperSliderText").text(ui.values[1]);
 		}
+
 		
 		mainGraphic.tryDraw(
 			[mainGraphic[chartToDraw].left, mainGraphic[chartToDraw].right], 

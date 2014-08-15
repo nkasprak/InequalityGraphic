@@ -81,11 +81,32 @@ try {
 		});
 		
 		$(".exploreSelector").change(function() {
+
 			mainGraphic.mode = "explore";
 			var chartNumber = $(this).val();
-			console.log(mainGraphic.sliderConfigs[chartNumber]);
-			$($("#slide5slider").find()).remove();
+			if (mainGraphic[5]) {
+				delete(mainGraphic[5].left);
+				delete(mainGraphic[5].right);
+			}
+			$("#slide5Canvas, #slide5RightCanvas").html("");
+			
+			mainGraphic.canvases["slide5left"] = Raphael("slide5Canvas", 403, 252);
+			mainGraphic.canvases["slide5right"] = Raphael("slide5RightCanvas", 81, 252);
+			
+
+			$("#slide5slider").remove();
+			
+			$("#slide5 .sliderContainer").append("<div id=\"slide5slider\" class=\"yearSlider\">");
 			$("#slide5slider").slider(mainGraphic.sliderConfigs[chartNumber]);
+			mainGraphic.styleSliderHandles(5);
+			
+			if ($("#slide5slider a").length > 1) {
+				$("#slide5slider").slider("values",[mainGraphic.minYear,mainGraphic.maxYear]);
+			}
+			
+			mainGraphic.initializeChartAfterSwitch(chartNumber);
+			
+			
 		});
 		
 		$("#slide5slider").slider(mainGraphic.sliderConfigs[1]);
