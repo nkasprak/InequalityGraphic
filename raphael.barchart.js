@@ -507,7 +507,9 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		//removed from the array already so as to not get deleted here
 		if (deleteAtEnd) {
 			for (var toRemoveInd = 0;toRemoveInd<activeIDList.length;toRemoveInd++) {
+				
 				toRemove = canvas.getById(document.getElementById(activeIDList[toRemoveInd]).raphaelid);
+				
 				if (this.gridOps.label_hidden == false) {
 					labelToRemove = canvas.getById(document.getElementById(activeIDList[toRemoveInd] + "_label").raphaelid);
 				}

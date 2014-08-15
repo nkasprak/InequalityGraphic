@@ -18,7 +18,7 @@ mainGraphic.applySliderConfig = function() {
 			range: true,
 			min: mainGraphic.minYear,
 			max: mainGraphic.maxYear,
-			values: [mainGraphic.minYear, mainGraphic.minYear],
+			values: [mainGraphic.minYear, mainGraphic.maxYear],
 			step: 1,
 			start: mainGraphic.pauseEverything,
 			slide: function (event, ui) {
@@ -29,7 +29,7 @@ mainGraphic.applySliderConfig = function() {
 			range: true,
 			min: mainGraphic.minYear,
 			max: mainGraphic.maxYear,
-			values: [mainGraphic.minYear, mainGraphic.minYear],
+			values: [mainGraphic.minYear, mainGraphic.maxYear],
 			step: 1,
 			start: mainGraphic.pauseEverything,
 			slide: function (event, ui) {
@@ -40,7 +40,7 @@ mainGraphic.applySliderConfig = function() {
 			range: true,
 			min: mainGraphic.minYear,
 			max: mainGraphic.maxYear,
-			values: [mainGraphic.minYear, mainGraphic.minYear],
+			values: [mainGraphic.minYear, mainGraphic.maxYear],
 			step: 1,
 			start: mainGraphic.pauseEverything,
 			slide: function (event, ui) {
