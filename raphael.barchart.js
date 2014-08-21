@@ -4,7 +4,7 @@
 
 Raphael.fn.barchart = function(chartdata,ops) {
 	
-	data = chartdata.data;
+	var data = chartdata.data;
 	if (chartdata.labels) this.labels = chartdata.labels;
 	if (chartdata.title) this.title = chartdata.title;
 	if (typeof(this.inMotion) == "undefined") this.inMotion = false;
@@ -41,7 +41,7 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		if (ops.chartWidth) this.chartWidth = ops.chartWidth;	
 		if (ops["font-family"]) this["font-family"] = ops["font-family"];
 		if (ops.graphMargins) {
-			for (graphMargin in ops.graphMargins) {
+			for (var graphMargin in ops.graphMargins) {
 				if (ops.graphMargins[graphMargin]) this.graphMargins[graphMargin] = ops.graphMargins[graphMargin];
 			}
 		}
@@ -84,7 +84,7 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		return val;
 	}
 	
-	this.updateData = function(data,ops) {
+	this.cycleYs = function() {
 		this.oldYMax = 0;
 		this.oldYMin = 0;
 		if (this.yMax) this.oldYMax = this.yMax;
@@ -93,7 +93,9 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		this.yMax = 0;
 		this.yMin = 0;
 		this.oldGridYs = this.gridYs;
-		//loop through data first time to determine min/max values
+	}
+	
+	this.determineMaxMin = function(data) {
 		var dataPoint;
 		var dataObj;
 		var maxminTracker = [];
@@ -114,76 +116,66 @@ Raphael.fn.barchart = function(chartdata,ops) {
 				}
 			}
 		}
+	}
 
-		if (ops) {
-			if (ops.yMax) this.yMax = ops.yMax;
-			if (ops.yMin) this.yMin = ops.yMin;	
-		}
-
+	this.setZeroPoint = function() {
 		var zeroPoint = (1-(0 - this.yMin)/(this.yMax - this.yMin))*this.chartAreaHeight;
 		
 		if (this.zeroPoint) this.oldZeroPoint = this.zeroPoint;
 		else this.oldZeroPoint = zeroPoint;
 		
 		this.zeroPoint = zeroPoint;
-		
-		
-		this.toDraw = {};
-		
-		//Prepare horizontal gridlines
-		
-		if (this.defGridlines) {
-			//Case for predefined gridlines
-		
-			//set gridlines to defined gridlines
-			this.gridYs = this.defGridlines;
-		} else {
-			//Case for default gridline determination
-			//Determine number of lines/increment
-			var allowedIncrements = [1,2,2.5,3,4,5];
-			var rangeMag = Math.ceil(this.log10(this.yMax - this.yMin));
-			var increment = 1;
-			var loopIncrement;
-			var allowedIncIndex;
-			var incFound = false;
-			var numGridlines;
-			for (var power = 1;power<4;power++) {
-				for (allowedIncIndex = 0;allowedIncIndex<allowedIncrements.length;allowedIncIndex++) {
-					loopIncrement = allowedIncrements[allowedIncIndex]*Math.pow(10,rangeMag - 3 + power);
-					if (incFound == false) increment=loopIncrement;
-					numGridlines = (this.yMax - this.yMin)/loopIncrement;
-					if (numGridlines <= this.maxGridlines) incFound = true;	
-				}
-			}
+	}
+	
+	this.determineGridYs = function() {
 			
-			
-			//Determine y values of gridlines
-			this.gridYs = [];
-			var y = 0;
-			while (y <= this.yMax) {
-				if (y==0) roundMag = 1;
-				else {
-					var decimals = 10-Math.ceil(Math.log(y));
-					var roundMag = Math.pow(10,decimals);
-				}
-				
-				this.gridYs.push(Math.round(y*roundMag)/roundMag);
-				y=y+increment;
-			}
-			y = 0-increment;
-			while (y >= this.yMin) {
-				if (y==0) roundMag = 1;
-				else {
-					var decimals = 10-Math.ceil(Math.log(y));
-					var roundMag = Math.pow(10,decimals);
-				}
-				
-				this.gridYs.push(Math.round(y*roundMag)/roundMag);	
-				y=y-increment;
+		var allowedIncrements = [1,2,2.5,3,4,5];
+		var rangeMag = Math.ceil(this.log10(this.yMax - this.yMin));
+		var increment = 1;
+		var loopIncrement;
+		var allowedIncIndex;
+		var incFound = false;
+		var numGridlines;
+		var gridYs;
+		for (var power = 1;power<4;power++) {
+			for (allowedIncIndex = 0;allowedIncIndex<allowedIncrements.length;allowedIncIndex++) {
+				loopIncrement = allowedIncrements[allowedIncIndex]*Math.pow(10,rangeMag - 3 + power);
+				if (incFound == false) increment=loopIncrement;
+				numGridlines = (this.yMax - this.yMin)/loopIncrement;
+				if (numGridlines <= this.maxGridlines) incFound = true;	
 			}
 		}
 		
-		//Determine canvas coordinates of gridlines
+		
+		//Determine y values of gridlines
+		gridYs = [];
+		var y = 0;
+		while (y <= this.yMax) {
+			if (y==0) roundMag = 1;
+			else {
+				var decimals = 10-Math.ceil(Math.log(y));
+				var roundMag = Math.pow(10,decimals);
+			}
+			
+			gridYs.push(Math.round(y*roundMag)/roundMag);
+			y=y+increment;
+		}
+		y = 0-increment;
+		while (y >= this.yMin) {
+			if (y==0) roundMag = 1;
+			else {
+				var decimals = 10-Math.ceil(Math.log(y));
+				var roundMag = Math.pow(10,decimals);
+			}
+			
+			gridYs.push(Math.round(y*roundMag)/roundMag);	
+			y=y-increment;
+		}
+		return gridYs;
+	}
+	
+	//Determine canvas coordinates of gridlines
+	this.determineGridlineCoordinates = function() {
 		var yCoord;
 		var idString;
 		for (var gridlInd = 0;gridlInd<this.gridYs.length;gridlInd++) {
@@ -200,21 +192,29 @@ Raphael.fn.barchart = function(chartdata,ops) {
 				this.toDraw["grid" + idString].oldloc = this.toDraw["grid" + idString].loc;	
 			}
 		}
-		
-		//loop through data again to prepare drawing of elements
+	}
+	
+	//loop through data again to prepare drawing of elements
+	this.prepareElementsForDraw = function(data) {
 		var barHeight;
 		var barWidth;
 		var barXOff;
 		var elemID;
+		var dataPoint;
+		var dataObj;
 		
 		var currentData = [];
 		var tempSeries = [];
 		var yOffsetTracker = []; //keeps track of start points for stacked charts
 		
+		var attrArray;
+		var borderWidth;
+		var barYOff;
+		
 		for (seriesIndex=0;seriesIndex<data.length;seriesIndex++) {
 			tempSeries = [];
 			
-			for (barIndex=0;barIndex<data[seriesIndex].series.length;barIndex++) {
+			for (var barIndex=0;barIndex<data[seriesIndex].series.length;barIndex++) {
 				
 				dataObj = data[seriesIndex].series[barIndex];
 				dataPoint = this.getData(data[seriesIndex].series[barIndex]);
@@ -258,9 +258,9 @@ Raphael.fn.barchart = function(chartdata,ops) {
 										width: Math.round(barWidth*1000)/1000,
 										height: Math.round(barHeight*1000)/1000};
 				//Add attributes to bars - precedence based on point - series - chart
-				var attrArray = ["color","border"];
+				attrArray = ["color","border"];
 				
-				for (attrIndex = 0;attrIndex < attrArray.length; attrIndex++) {
+				for (var attrIndex = 0;attrIndex < attrArray.length; attrIndex++) {
 					//chart global
 					this.toDraw[elemID][attrArray[attrIndex]] = this.bar_ops[attrArray[attrIndex]];
 					
@@ -276,7 +276,7 @@ Raphael.fn.barchart = function(chartdata,ops) {
 					
 				}
 				//Fix so border doesn't affect overall width/height
-				var borderWidth = this.toDraw[elemID].border.width;
+				borderWidth = this.toDraw[elemID].border.width;
 				if (borderWidth > 0) {
 					this.toDraw[elemID].width -= borderWidth;
 					this.toDraw[elemID].height -= borderWidth;
@@ -289,7 +289,10 @@ Raphael.fn.barchart = function(chartdata,ops) {
 					
 				}
 			}
+			
+			
 			currentData.push(tempSeries);
+			
 			
 		}
 		
@@ -300,6 +303,7 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		var signChanges = [];
 		var oldSign;
 		var newSign;
+		var signChange;
 		for (var seriesIndex = 0;seriesIndex<this.olddata.length;seriesIndex++) {
 			signChanges[seriesIndex] = [];
 			for (var dataIndex=0;dataIndex<this.olddata[seriesIndex].length;dataIndex++) {
@@ -313,10 +317,50 @@ Raphael.fn.barchart = function(chartdata,ops) {
 			}
 		}
 	}
+
+	
+	this.updateData = function(data,ops) {
+		
+		this.cycleYs();
+		
+		//loop through data first time to determine min/max values
+		this.determineMaxMin(data);
+		
+		if (ops) {
+			if (ops.yMax) this.yMax = ops.yMax;
+			if (ops.yMin) this.yMin = ops.yMin;	
+		}
+
+		this.setZeroPoint();
+		
+		this.toDraw = {};
+		
+		//Prepare horizontal gridlines
+		
+		if (this.defGridlines) {
+			//Case for predefined gridlines
+		
+			//set gridlines to defined gridlines
+			this.gridYs = this.defGridlines;
+		} else {
+			//Case for default gridline determination
+			//Determine number of lines/increment
+			this.gridYs = this.determineGridYs();
+		}
+		
+		this.determineGridlineCoordinates();
+		
+		this.prepareElementsForDraw(data);
+		
+		
+	}
 	
 	this.updateData(data,ops);
 	
+	
+
 	this.draw = function (canvas, length) {
+		
 		//get id of canvas to avoid namespace conflicts
 		this.inMotion = true;
 		var parentID = canvas.canvas.parentNode.id;
@@ -334,10 +378,8 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		//Declaring various variables used in the subsequent loop
 		var elemID;
 		var labelID;
-		var textObj;
-		var toRemove;
-		var newYval;
 		var dummyID = parentID + "_dummyAnimator";
+		
 		if (document.getElementById(dummyID)) {
 			var dummyRect = canvas.getById(document.getElementById(dummyID).raphaelid);
 			dummyRect.attr({x:0});
@@ -348,7 +390,6 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		var animationSyncObject = Raphael.animation({x:this.chartWidth},length,animationDone);
 		
 		dummyRect.node.id = parentID + "_dummyAnimator";
-		//dummyRect.attr("stroke-opacity",0);
 		dummyRect.animate(animationSyncObject);
 		dummyRect.parentCanvas = this;
 		function animationDone() {
@@ -356,126 +397,142 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		}
 		
 		//Loop through all elements in the toDraw list and handle appropriately.
-		for (elem in this.toDraw) {
+		for (var elem in this.toDraw) {
 			elemID = parentID + "_barchartsub_" + elem;
 			labelID = parentID + "_barchartsub_" + elem + "_label";
 			switch (this.toDraw[elem].type) {
 			case "rect":
 				//Drawing a bar
-				if (document.getElementById(elemID)) {
-					//Case where bar already exists in chart. Need to animate change.
-					elemObj = canvas.getById(document.getElementById(elemID).raphaelid);
-					elemObj.animateWith(dummyRect,animationSyncObject,Raphael.animation({	x:this.toDraw[elem].x + this.globalXOff,
-										width:this.toDraw[elem].width,
-										stroke:this.toDraw[elem].border.color,
-										fill:this.toDraw[elem].color,
-										"stroke-width":this.toDraw[elem].border.width
-									},length));
-					if (this.toDraw[elem].signChange == false) {
-						halfwayZeroPoint = (this.zeroPoint + this.oldZeroPoint)/2; 
-						elemObj.finalEndingY = this.toDraw[elem].y + this.globalYOff;
-						elemObj.finalEndingHeight = this.toDraw[elem].height;
-						elemObj.animate({	height:0,
-											y:halfwayZeroPoint + this.globalYOff},
-											length/2,
-											null,
-											function() {
-												this.animate({y:this.finalEndingY,
-																height:this.finalEndingHeight},
-																length/2);
-											});
+				(function(chartObj) {
+					if (document.getElementById(elemID)) {
+						//Case where bar already exists in chart. Need to animate change.
+						
+						var elemObj = canvas.getById(document.getElementById(elemID).raphaelid);
+						var halfwayZeroPoint;
+						elemObj.animateWith(dummyRect,animationSyncObject,Raphael.animation(
+							{	
+								x:					chartObj.toDraw[elem].x + chartObj.globalXOff,
+								width:				chartObj.toDraw[elem].width,
+								stroke:				chartObj.toDraw[elem].border.color,
+								fill:				chartObj.toDraw[elem].color,
+								"stroke-width":	chartObj.toDraw[elem].border.width
+							},length));
+							
+						if (chartObj.toDraw[elem].signChange == false) {
+							halfwayZeroPoint = (chartObj.zeroPoint + chartObj.oldZeroPoint)/2; 
+							elemObj.finalEndingY = chartObj.toDraw[elem].y + chartObj.globalYOff;
+							elemObj.finalEndingHeight = chartObj.toDraw[elem].height;
+							elemObj.animate({	
+								height:	0,
+								y:		halfwayZeroPoint + chartObj.globalYOff
+							}, length/2, null, function() {
+								elemObj.animate(
+									{	
+										y:		elemObj.finalEndingY,
+										height:	elemObj.finalEndingHeight
+									}, length/2);
+							});
+						} else {
+							elemObj.animateWith(dummyRect,animationSyncObject,Raphael.animation({y:chartObj.toDraw[elem].y + chartObj.globalYOff,
+												height:chartObj.toDraw[elem].height},length));
+						}
 					} else {
-						elemObj.animateWith(dummyRect,animationSyncObject,Raphael.animation({y:this.toDraw[elem].y + this.globalYOff,
-											height:this.toDraw[elem].height},length));
+						//Case where we're drawing a new bar.
+						elemObj = canvas.rect(chartObj.toDraw[elem].x + chartObj.globalXOff,
+								chartObj.toDraw[elem].y + chartObj.globalYOff,
+								chartObj.toDraw[elem].width,
+								chartObj.toDraw[elem].height);
+						elemObj.attr("fill",chartObj.toDraw[elem].color);
+						elemObj.attr("stroke",chartObj.toDraw[elem].border.color);
+						elemObj.attr("stroke-width",chartObj.toDraw[elem].border.width);
+						elemObj.node.id = elemID;
 					}
-				} else {
-					//Case where we're drawing a new bar.
-					elemObj = canvas.rect(this.toDraw[elem].x + this.globalXOff,
-							this.toDraw[elem].y + this.globalYOff,
-							this.toDraw[elem].width,
-							this.toDraw[elem].height);
-					elemObj.attr("fill",this.toDraw[elem].color);
-					elemObj.attr("stroke",this.toDraw[elem].border.color);
-					elemObj.attr("stroke-width",this.toDraw[elem].border.width);
-					elemObj.node.id = elemID;
-				}
+				})(this);
 			break;
 			case "gridline":
 				//Drawing a gridline
-				if (document.getElementById(elemID)) {
-					//Case where the gridline already exists in the chart and will continue to exist in the new chart
+				(function(chartObj) {
 					
-					//This path represents where the gridline will end up at the end of the animation
-					var pathString = "M"+Math.round(this.toDraw[elem].left + this.globalXOff)+","+Math.round(this.toDraw[elem].loc + this.globalYOff)+"H"+Math.round(this.toDraw[elem].right + this.globalXOff);
+					var label;
+					var labelObj;
+					var pathString;
+					var elemObj;
+					var textObj;
 					
-					elemObj = canvas.getById(document.getElementById(elemID).raphaelid); 
-					elemObj.animateWith(dummyRect,animationSyncObject,Raphael.animation({path:pathString},length));
-									
-					//Remove the gridline from the activeIDList so it doesn't get deleted later				
-					activeIDList = Raphael.fn.barchart.removeFromArrayByValue(activeIDList,elemID);
-					if (this.gridOps.label_hidden == false) {
-						if (document.getElementById(labelID)) { //No reason the label shouldn't exist if the element does, but doesn't hurt to check
-							labelObj = canvas.getById(document.getElementById(labelID).raphaelid);
-							labelObj.animateWith(dummyRect,animationSyncObject,Raphael.animation({y:this.toDraw[elem].loc + this.globalYOff},length));	
+					if (document.getElementById(elemID)) {
+						//Case where the gridline already exists in the chart and will continue to exist in the new chart
+						//This path represents where the gridline will end up at the end of the animation
+						pathString = "M"+Math.round(chartObj.toDraw[elem].left + chartObj.globalXOff)+","+Math.round(chartObj.toDraw[elem].loc + chartObj.globalYOff)+"H"+Math.round(chartObj.toDraw[elem].right + chartObj.globalXOff);
+						
+						elemObj = canvas.getById(document.getElementById(elemID).raphaelid); 
+						elemObj.animateWith(dummyRect,animationSyncObject,Raphael.animation({path:pathString},length));
+										
+						//Remove the gridline from the activeIDList so it doesn't get deleted later				
+						activeIDList = Raphael.fn.barchart.removeFromArrayByValue(activeIDList,elemID);
+						if (chartObj.gridOps.label_hidden == false) {
+							if (document.getElementById(labelID)) { //No reason the label shouldn't exist if the element does, but doesn't hurt to check
+								labelObj = canvas.getById(document.getElementById(labelID).raphaelid);
+								labelObj.animateWith(dummyRect,animationSyncObject,Raphael.animation({y:chartObj.toDraw[elem].loc + chartObj.globalYOff},length));	
+							}
 						}
-					}
-				} else {
-					//Case where we're creating a new gridline
-					
-					//Path to represent where the gridline would lie on the old chart (it starts out there and moves along with the rest of the animation)
-					var pathString = "M"+Math.round(this.toDraw[elem].left + this.globalXOff)+","+Math.round(this.toDraw[elem].oldloc + this.globalYOff)+"H"+Math.round(this.toDraw[elem].right + this.globalXOff);
-					
-					label = elem.slice(4); //cut out "grid" in element name, left with encoded y-value
-					label = label.replace("n","-"); //change back to number
-					label = label.replace("_",".");
-					
-					elemObj = canvas.path(pathString);
-					
-					if (label == 0) {
-						elemObj.attr("stroke-width",this.gridOps.width+1);
-						elemObj.attr("stroke","#333");
 					} else {
-						elemObj.attr("stroke-width",this.gridOps.width);
-						elemObj.attr("stroke",this.gridOps.color);
-					}
-					
-					if (this.gridOps.label_percent == true) {
-						label = label*1;
-						label = Math.round((label*100)) + "%";
-					}
-					
-					if (this.gridOps.label_commas) {
-						label = this.commaSeparateNumber(label);
-					}
-					if (this.gridOps.label_prefix) {
-						label = this.gridOps.label_prefix + label;	
-					}
-					
-					elemObj.toBack(); //needs to go behind bars
-					elemObj.attr("stroke-opacity",0);
-					elemObj.node.id =elemID;
-					
-					pathString = "M"+Math.round(this.toDraw[elem].left + this.globalXOff)+","+Math.round(this.toDraw[elem].loc + this.globalYOff)+"H"+Math.round(this.toDraw[elem].right + this.globalXOff);
-					this.listOfGridlineIDs.push(parentID + "_barchartsub_" + elem); //add to list of active gridlines so future animations can keep track of them
-			
-					if (this.gridOps.label_hidden == false) {
-						if (!document.getElementById(labelID)) { //the label shouldn't exist but may as well check to make sure it doesn't
-							//Draw the label in the "old" location so it can be animated into the new one
-							textObj = canvas.text(this.toDraw[elem].left + this.globalXOff-(0.01*this.chartAreaWidth),this.toDraw[elem].oldloc + this.globalYOff, label);
-							textObj.attr("fill",this.gridOps.color);
-							textObj.attr("font-size",this.fontSize);
-							textObj.attr("font-family",this["font-family"]);
-							textObj.attr("fill-opacity",0);
-							textObj.attr("text-anchor","end");
-							textObj.node.id = labelID;
-							textObj.animateWith(dummyRect,animationSyncObject,Raphael.animation({y:this.toDraw[elem].loc + this.globalYOff,"fill-opacity":1}, length));
+						//Case where we're creating a new gridline
+						
+						//Path to represent where the gridline would lie on the old chart (it starts out there and moves along with the rest of the animation)
+						pathString = "M"+Math.round(chartObj.toDraw[elem].left + chartObj.globalXOff)+","+Math.round(chartObj.toDraw[elem].oldloc + chartObj.globalYOff)+"H"+Math.round(chartObj.toDraw[elem].right + chartObj.globalXOff);
+						
+						label = elem.slice(4); //cut out "grid" in element name, left with encoded y-value
+						label = label.replace("n","-"); //change back to number
+						label = label.replace("_",".");
+						
+						elemObj = canvas.path(pathString);
+						
+						if (label == 0) {
+							elemObj.attr("stroke-width",chartObj.gridOps.width+1);
+							elemObj.attr("stroke","#333");
+						} else {
+							elemObj.attr("stroke-width",chartObj.gridOps.width);
+							elemObj.attr("stroke",chartObj.gridOps.color);
 						}
-					
 						
+						if (chartObj.gridOps.label_percent == true) {
+							label = label*1;
+							label = Math.round((label*100)) + "%";
+						}
 						
+						if (chartObj.gridOps.label_commas) {
+							label = chartObj.commaSeparateNumber(label);
+						}
+						if (chartObj.gridOps.label_prefix) {
+							label = chartObj.gridOps.label_prefix + label;	
+						}
+						
+						elemObj.toBack(); //needs to go behind bars
+						elemObj.attr("stroke-opacity",0);
+						elemObj.node.id =elemID;
+						
+						pathString = "M"+Math.round(chartObj.toDraw[elem].left + chartObj.globalXOff)+","+Math.round(chartObj.toDraw[elem].loc + chartObj.globalYOff)+"H"+Math.round(chartObj.toDraw[elem].right + chartObj.globalXOff);
+						chartObj.listOfGridlineIDs.push(parentID + "_barchartsub_" + elem); //add to list of active gridlines so future animations can keep track of them
+				
+						if (chartObj.gridOps.label_hidden == false) {
+							if (!document.getElementById(labelID)) { //the label shouldn't exist but may as well check to make sure it doesn't
+								//Draw the label in the "old" location so it can be animated into the new one
+								textObj = canvas.text(chartObj.toDraw[elem].left + chartObj.globalXOff-(0.01*chartObj.chartAreaWidth),chartObj.toDraw[elem].oldloc + chartObj.globalYOff, label);
+								textObj.attr("fill",chartObj.gridOps.color);
+								textObj.attr("font-size",chartObj.fontSize);
+								textObj.attr("font-family",chartObj["font-family"]);
+								textObj.attr("fill-opacity",0);
+								textObj.attr("text-anchor","end");
+								textObj.node.id = labelID;
+								textObj.animateWith(dummyRect,animationSyncObject,Raphael.animation({y:chartObj.toDraw[elem].loc + chartObj.globalYOff,"fill-opacity":1}, length));
+							}
+						
+							
+							
+						}
+						elemObj.animateWith(dummyRect,animationSyncObject,Raphael.animation({path:pathString,"stroke-opacity":1},length));
 					}
-					elemObj.animateWith(dummyRect,animationSyncObject,Raphael.animation({path:pathString,"stroke-opacity":1},length));
-				}
+				})(this);
 			break;
 			}
 		}
@@ -483,31 +540,41 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		canvas.getById(document.getElementById(parentID + "_barchartsub_grid0").raphaelid).toFront();
 		
 		//draw labels
-	
-		
-		for (var labelIndex = 0;labelIndex<this.labels.length;labelIndex++) {
-			labelID = parentID + "barchartsub_barlabel_" + labelIndex;
-			labelX = (labelIndex+0.5)*this.chartAreaWidth/this.labels.length + this.globalXOff;
-			labelY = this.chartAreaHeight + this.globalYOff + 10;
-			if (document.getElementById(labelID)) {
-				textObj = canvas.getById(document.getElementById(labelID).raphaelid);
-				textObj.animateWith(dummyRect,animationSyncObject,Raphael.animation({x:labelX,y:labelY + textObj._getBBox().height/2},length));
-			} else {
-				textObj = canvas.text(labelX,labelY,this.labels[labelIndex]);
-				textObj.attr("font-size",this.fontSize);
-				textObj.attr("font-family",this["font-family"]);
-				textObj.attr("y",textObj.attrs.y + textObj._getBBox().height/2);
-				textObj.attr("fill",this.barLabelColor);
-				textObj.node.id = labelID;
+		this.drawLabels = function() {
+			var labelID;
+			var labelX;
+			var labelY;
+			var textObj;
+			for (var labelIndex = 0;labelIndex<this.labels.length;labelIndex++) {
+				labelID = parentID + "barchartsub_barlabel_" + labelIndex;
+				labelX = (labelIndex+0.5)*this.chartAreaWidth/this.labels.length + this.globalXOff;
+				labelY = this.chartAreaHeight + this.globalYOff + 10;
+				if (document.getElementById(labelID)) {
+					textObj = canvas.getById(document.getElementById(labelID).raphaelid);
+					textObj.animateWith(dummyRect,animationSyncObject,Raphael.animation({x:labelX,y:labelY + textObj._getBBox().height/2},length));
+				} else {
+					textObj = canvas.text(labelX,labelY,this.labels[labelIndex]);
+					textObj.attr("font-size",this.fontSize);
+					textObj.attr("font-family",this["font-family"]);
+					textObj.attr("y",textObj.attrs.y + textObj._getBBox().height/2);
+					textObj.attr("fill",this.barLabelColor);
+					textObj.node.id = labelID;
+				}
 			}
 		}
+		this.drawLabels();
+		
 		
 		
 		//Go through and animate away and then delete any gridlines left in the activeIDlist - anything that still needs to be there should have been
 		//removed from the array already so as to not get deleted here
-		if (deleteAtEnd) {
+		this.animateAwayOldGridlines = function() {
 			for (var toRemoveInd = 0;toRemoveInd<activeIDList.length;toRemoveInd++) {
-				
+				var toRemove;
+				var yCoord;
+				var newYval;
+				var pathString;
+				var labelToRemove;
 				toRemove = canvas.getById(document.getElementById(activeIDList[toRemoveInd]).raphaelid);
 				
 				if (this.gridOps.label_hidden == false) {
@@ -534,11 +601,14 @@ Raphael.fn.barchart = function(chartdata,ops) {
 				toRemove.animateWith(dummyRect,animationSyncObject,Raphael.animation({"stroke-opacity":0,path:pathString},length,null,function() {this.remove();}));
 			}
 		}
+		if (deleteAtEnd) {
+			this.animateAwayOldGridlines();
+		}
 	}
 }
 
 Raphael.fn.barchart.removeFromArrayByValue = function(arr, toRemove) {
-	returnarr = [];
+	var returnarr = [];
 	for (var i = 0;i<arr.length;i++) {
 		if (arr[i] != toRemove) {
 			returnarr.push(arr[i]);
