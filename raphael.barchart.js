@@ -194,6 +194,30 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		}
 	}
 	
+	//Check for sign changes - affects animation.
+	this.prepareSignChanges = function() {
+		console.log(this);
+		var seriesIndex;
+		var dataIndex;
+		var signChanges = [];
+		var oldSign;
+		var newSign;
+		var signChange;
+		var elemID;
+		for (seriesIndex = 0;seriesIndex<this.olddata.length;seriesIndex++) {
+			signChanges[seriesIndex] = [];
+			for (dataIndex=0;dataIndex<this.olddata[seriesIndex].length;dataIndex++) {
+				elemID = "s" + seriesIndex + "b" + dataIndex;
+				oldSign = (this.olddata[seriesIndex][dataIndex] > 0) ? 1:0;
+				newSign = (this.currentdata[seriesIndex][dataIndex] > 0) ? 1:0;
+				signChange = (oldSign == newSign) ? 0:1;
+				if (oldSign == newSign) this.toDraw[elemID].signChange = true;
+				else this.toDraw[elemID].signChange = false;
+				
+			}
+		}
+	};
+	
 	//loop through data again to prepare drawing of elements
 	this.prepareElementsForDraw = function(data) {
 		var barHeight;
@@ -202,6 +226,9 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		var elemID;
 		var dataPoint;
 		var dataObj;
+		var barIndex;
+		var attrIndex;
+		var seriesIndex;
 		
 		var currentData = [];
 		var tempSeries = [];
@@ -214,7 +241,7 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		for (seriesIndex=0;seriesIndex<data.length;seriesIndex++) {
 			tempSeries = [];
 			
-			for (var barIndex=0;barIndex<data[seriesIndex].series.length;barIndex++) {
+			for (barIndex=0;barIndex<data[seriesIndex].series.length;barIndex++) {
 				
 				dataObj = data[seriesIndex].series[barIndex];
 				dataPoint = this.getData(data[seriesIndex].series[barIndex]);
@@ -260,7 +287,7 @@ Raphael.fn.barchart = function(chartdata,ops) {
 				//Add attributes to bars - precedence based on point - series - chart
 				attrArray = ["color","border"];
 				
-				for (var attrIndex = 0;attrIndex < attrArray.length; attrIndex++) {
+				for (attrIndex = 0;attrIndex < attrArray.length; attrIndex++) {
 					//chart global
 					this.toDraw[elemID][attrArray[attrIndex]] = this.bar_ops[attrArray[attrIndex]];
 					
@@ -292,32 +319,14 @@ Raphael.fn.barchart = function(chartdata,ops) {
 			
 			
 			currentData.push(tempSeries);
-			
-			
 		}
 		
-		//Check for sign changes - affects animation.
 		if (this.currentdata) this.olddata = this.currentdata;
 		else this.olddata = currentData;
 		this.currentdata = currentData;
-		var signChanges = [];
-		var oldSign;
-		var newSign;
-		var signChange;
-		for (var seriesIndex = 0;seriesIndex<this.olddata.length;seriesIndex++) {
-			signChanges[seriesIndex] = [];
-			for (var dataIndex=0;dataIndex<this.olddata[seriesIndex].length;dataIndex++) {
-				elemID = "s" + seriesIndex + "b" + dataIndex;
-				oldSign = (this.olddata[seriesIndex][dataIndex] > 0) ? 1:0;
-				newSign = (this.currentdata[seriesIndex][dataIndex] > 0) ? 1:0;
-				signChange = (oldSign == newSign) ? 0:1;
-				if (oldSign == newSign) this.toDraw[elemID].signChange = true;
-				else this.toDraw[elemID].signChange = false;
-				
-			}
-		}
+		
+		this.prepareSignChanges();
 	}
-
 	
 	this.updateData = function(data,ops) {
 		
