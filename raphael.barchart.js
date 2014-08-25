@@ -196,7 +196,6 @@ Raphael.fn.barchart = function(chartdata,ops) {
 	
 	//Check for sign changes - affects animation.
 	this.prepareSignChanges = function() {
-		console.log(this);
 		var seriesIndex;
 		var dataIndex;
 		var signChanges = [];

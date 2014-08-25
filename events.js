@@ -1,8 +1,8 @@
 // JavaScript Document
 
-function createEventSequence(obj) {
-	eventSequence = [	//slide, leftYear, rightYear, seconds
-		[1,null,1979,.1, obj.showPlay],
+mainGraphic.createEventSequence = function() {
+	var eventSequence = [	//slide, leftYear, rightYear, seconds
+		[1,null,1979,.1, this.showPlay],
 		[1,null,1980,.1],
 		[1,null,1981,.1],
 		[1,null,1982,.1],
@@ -132,7 +132,7 @@ function createEventSequence(obj) {
 		[4,1979,2007,5],
 		[4,1979,2008,.1],
 		[4,1979,2009,.1],
-		[4,1979,2010,3,obj.showsOver]
+		[4,1979,2010,3,this.showsOver]
 		
 	];
 	

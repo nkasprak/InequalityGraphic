@@ -14,14 +14,20 @@
     	<?php 
 		$tabText = array(
 			array("text"=>"Intro","numeral"=>""),
-			array("text"=>"The growth of<br />income inequality","numeral"=>"I"),
+			array("text"=>"The growth <br />of income inequality","numeral"=>"I"),
 			array("text"=>"Income inequality<br />in dollar terms","numeral"=>"II"),
 			array("text"=>"Intensifying<br />income concentration","numeral"=>"III"),
-			array("text"=>"The role of<br />federal taxes","numeral"=>"IV"),
+			array("text"=>"The role<br />of federal<br />taxes","numeral"=>"IV"),
 			array("text"=>"Explore","numeral"=>"")
 		);
 		for ($i=0;$i<=5;$i++) : ?>
-    	<div id="selectSlide<?php echo $i?>" class="slideSelector <?php echo ($i==0 ? "selected" : "");?>"><div class="inner"><div class="numeral"><?php echo $tabText[$i]["numeral"]; ?></div><div class="text"><?php echo $tabText[$i]["text"]; ?></div></div></div>
+    	<div id="selectSlide<?php echo $i?>" class="slideSelector <?php echo ($i==0 ? "selected" : "");?>">
+        	<div class="inner">
+            	<?php if ($i!=5) :?><div class="betweenSelect"><div class="caret"></div></div><?php endif; ?>
+            	<div class="numeral"><?php echo $tabText[$i]["numeral"]; ?></div><div class="text"><?php echo $tabText[$i]["text"]; ?></div>
+            </div>
+        </div>
+        	
         <?php endfor; ?>
     </div> <!-- end slideSelectArea -->
     
@@ -97,11 +103,12 @@
 <script type="text/javascript" src = "raphael.barchart.js"></script>
 <script type="text/javascript" src="jquery-ui-1.10.3/js/jquery-1.9.1.js"></script>
 <script type="text/javascript" src="jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script type="text/javascript" src="methods.js"></script>
 <script type="text/javascript" src="data.js"></script>
 <script type="text/javascript" src="text.js"></script>
 <script type="text/javascript" src="events.js"></script>
 <script type="text/javascript" src="chartOptions.js"></script>
-<script type="text/javascript" src="methods.js"></script>
+
 <script type="text/javascript" src="sliders.js"></script>
 <script type="text/javascript" src="main.js"></script>
 

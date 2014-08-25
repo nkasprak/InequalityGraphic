@@ -52,12 +52,14 @@ mainGraphic.event_fire = function(eventParams) {
 			else ui.value = eventParams[2];
 			mainGraphic.sliderChangeFunction(null,ui,eventParams[0]);
 			
+			
+			
 			//Check to make sure it's not on the last event. 
-			if (mainGraphic.eventIndex < eventSequence.length-1) {
+			if (mainGraphic.eventIndex < mainGraphic.eventSequence.length-1) {
 				
 				//Set a timer to run the next event based on the event length (eventParms[3])
 				mainGraphic.mainGlobalEventTimer = setTimeout(function() {
-					mainGraphic.event_fire(eventSequence[mainGraphic.eventIndex])
+					mainGraphic.event_fire(mainGraphic.eventSequence[mainGraphic.eventIndex])
 				},eventParams[3]*1000);
 				
 				//Increment the event tracker
@@ -74,10 +76,10 @@ mainGraphic.event_fire = function(eventParams) {
 		//mainGraphic.event_fire execution begins:
 		
 		//Check if there's a previous event
-		if (eventSequence[mainGraphic.eventIndex-1]) { //There is a previous event
+		if (mainGraphic.eventSequence[mainGraphic.eventIndex-1]) { //There is a previous event
 		
 			//Check if the previous event is on the same slide, or if 
-			if ((eventSequence[mainGraphic.eventIndex][0] == eventSequence[mainGraphic.eventIndex-1][0]) || mainGraphic.popupsShown[eventParams[0]]) {
+			if ((mainGraphic.eventSequence[mainGraphic.eventIndex][0] == mainGraphic.eventSequence[mainGraphic.eventIndex-1][0]) || mainGraphic.popupsShown[eventParams[0]]) {
 				continueEvents();
 			} else {
 				popup();
@@ -126,6 +128,13 @@ mainGraphic.changeSlide = function(slideClicked) {
 		
 		if (slideClicked==5) {
 			$(".exploreSelector").trigger("change");
+		}
+		
+		//Color the arrows properly
+		$("#slideSelectArea .slideSelector .betweenSelect .caret").removeClass("dark");
+		for (var i=0;i<slideClicked;i++) {
+			console.log($("#selectSlide" + i + " .betweenSelect .caret"));
+			$("#selectSlide" + i + " .betweenSelect .caret").addClass("dark");
 		}
 	}
 	mainGraphic.activeSlide = slideClicked;
@@ -257,7 +266,7 @@ mainGraphic.hitPlay = function() {
 //Hit pause button
 mainGraphic.hitPause = function() {
 	$(".chartDescHeader, .chartDescBody").css("opacity",1);
-	var returnToChart =eventSequence[mainGraphic.returnToEvent][0];
+	var returnToChart =mainGraphic.eventSequence[mainGraphic.returnToEvent][0];
 	var currentChart = mainGraphic.activeSlide;
 	if (returnToChart == currentChart) {
 		if ($("#slide" + currentChart + "slider a").length > 1) {
@@ -265,22 +274,22 @@ mainGraphic.hitPause = function() {
 		} else {
 			var yearToUse = $("#slide" + currentChart + "slider").slider("option","value");
 		}
-		for (var i = 0;i<eventSequence.length;i++) {
-			if (eventSequence[i][2] == yearToUse && eventSequence[i][0] == currentChart) {
+		for (var i = 0;i<mainGraphic.eventSequence.length;i++) {
+			if (mainGraphic.eventSequence[i][2] == yearToUse && mainGraphic.eventSequence[i][0] == currentChart) {
 				mainGraphic.eventIndex = i;
 				break;
 			}
 		}
 	} else {
-		for (var i = 0;i<eventSequence.length;i++) {
-			if (eventSequence[i][0] == currentChart) {
+		for (var i = 0;i<mainGraphic.eventSequence.length;i++) {
+			if (mainGraphic.eventSequence[i][0] == currentChart) {
 				mainGraphic.eventIndex = i;
 				break;
 			}
 		}
 	}
 	$("#playPauseArea img").attr("src",$("#playPauseArea img").attr("src").replace("play","pause"));
-	mainGraphic.event_fire(eventSequence[mainGraphic.eventIndex]);
+	mainGraphic.event_fire(mainGraphic.eventSequence[mainGraphic.eventIndex]);
 	mainGraphic.playing = true;	
 	mainGraphic.showBlurbs();
 }
@@ -383,14 +392,14 @@ mainGraphic.sliderChangeFunction = function (event, ui, chartNumber) {
 		else $("#slide" + chartNumber + "slider").slider('values',[ui.values[0],ui.values[1]]);
 		
 		//Slice up data in the correct way based on by-chart configuration in data.js
-		var gData = assignData(ui,chartNumber);
+		var gData = mainGraphic.assignData(ui,chartNumber);
 		var chartData = gData.data1;
 		var chartData2 = gData.data2;
 		mainGraphic.customMax = gData.customMax;
 		mainGraphic.customMin = gData.customMin;
 		
 		//Get chart options configuration object from chartOptions.js
-		var ops = getChartOptionsObj();
+		var ops = mainGraphic.getChartOptionsObj();
 		ops[chartNumber].left.yMax = mainGraphic.customMax;
 		ops[chartNumber].left.yMin = mainGraphic.customMin;
 		ops[chartNumber].right.yMax = mainGraphic.customMax;

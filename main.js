@@ -35,10 +35,11 @@ try {
 		mainGraphic.eventIndex=0;
 		
 		//Load text snippes into graphic object from text.js file
-		assignTextSnippets(mainGraphic);
+		mainGraphic.assignTextSnippets();
 		
 		//Load event data into graphic object from data.js
-		var eventSequence = createEventSequence(mainGraphic);
+		mainGraphic.eventSequence = mainGraphic.createEventSequence();
+		var eventSequence = mainGraphic.eventSequence;
 		
 		//Loads configuration objects from sliders.js
 		mainGraphic.applySliderConfig();

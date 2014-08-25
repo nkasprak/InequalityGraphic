@@ -1,6 +1,6 @@
 // JavaScript Document
 
-var getChartOptionsObj = function() {
+mainGraphic.getChartOptionsObj = function() {
 	var ops = [];
 	
 	ops[1] = {};
