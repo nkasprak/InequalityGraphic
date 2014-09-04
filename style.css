@@ -70,12 +70,12 @@ body {
 	bottom:0px;
 }
 
-#selectSlide0 {width:10%;}
-#selectSlide1 {width:16%;}
-#selectSlide2 {width:19%;}
-#selectSlide3 {width:19%;}
-#selectSlide4 {width:14%;}
-#selectSlide5 {width:10%;}
+#selectSlide0 {width:9%;}
+#selectSlide1 {width:15%;}
+#selectSlide2 {width:20%;}
+#selectSlide3 {width:21%;}
+#selectSlide4 {width:16%;}
+#selectSlide5 {width:6%;}
 
 #slideSelectArea .slideSelector .inner {
 	margin:0px;
@@ -110,6 +110,12 @@ body {
 	right:0px;
 	text-align:left;
 }
+
+#selectSlide1.slideSelector .text {width:85%}
+#selectSlide2.slideSelector .text {width:83%}
+#selectSlide3.slideSelector .text {width:79%}
+#selectSlide4.slideSelector .text {width:70%}
+#selectSlide5.slideSelector .text {width:100%}
 
 #slideSelectArea .slideSelector.selected {
 	/*background-color:#fff;

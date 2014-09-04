@@ -54,7 +54,9 @@ mainGraphic.getChartOptionsObj = function() {
 		gridOps: {
 			label_percent: false,
 			label_commas: true,
-			label_prefix: "$"
+			label_prefix: "$",
+			label_divideBy: 1000,
+			label_appendix: "K"
 		}
 	
 	};

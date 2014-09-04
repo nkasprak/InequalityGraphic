@@ -133,7 +133,6 @@ mainGraphic.changeSlide = function(slideClicked) {
 		//Color the arrows properly
 		$("#slideSelectArea .slideSelector .betweenSelect .caret").removeClass("dark");
 		for (var i=0;i<slideClicked;i++) {
-			console.log($("#selectSlide" + i + " .betweenSelect .caret"));
 			$("#selectSlide" + i + " .betweenSelect .caret").addClass("dark");
 		}
 	}

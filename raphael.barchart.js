@@ -18,12 +18,14 @@ Raphael.fn.barchart = function(chartdata,ops) {
 	this.maxGridlines = 10;
 	this.graphMargins = {left:.1,right:.1,top:.05,bottom:.15};
 	this.gridOps = {
-		color:"#dddddd",
+		color:"#aaa",
 		width:1,
 		label_percent:false,
 		label_commas:false,
 		label_prefix:null,
-		label_hidden:false
+		label_hidden:false,
+		label_appendix:null,
+		label_divideBy:1
 	}
 	this["font-family"] = "Arial, sans-serif";
 	this.bar_ops = {};
@@ -364,8 +366,6 @@ Raphael.fn.barchart = function(chartdata,ops) {
 	}
 	
 	this.updateData(data,ops);
-	
-	
 
 	this.draw = function (canvas, length) {
 		
@@ -503,6 +503,10 @@ Raphael.fn.barchart = function(chartdata,ops) {
 							elemObj.attr("stroke",chartObj.gridOps.color);
 						}
 						
+						if (chartObj.gridOps.label_divideBy) {
+							label = label/chartObj.gridOps.label_divideBy;
+						}
+						
 						if (chartObj.gridOps.label_percent == true) {
 							label = label*1;
 							label = Math.round((label*100)) + "%";
@@ -513,6 +517,9 @@ Raphael.fn.barchart = function(chartdata,ops) {
 						}
 						if (chartObj.gridOps.label_prefix) {
 							label = chartObj.gridOps.label_prefix + label;	
+						}
+						if (chartObj.gridOps.label_appendix) {
+							label = label + chartObj.gridOps.label_appendix;
 						}
 						
 						elemObj.toBack(); //needs to go behind bars
