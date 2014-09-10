@@ -9,8 +9,8 @@ mainGraphic.getChartOptionsObj = function() {
 		chartHeight: 252,
 		barStyle: "normal",
 		barWidthPercent: .8,
-		"font-family": "source-sans-pro, sans-serif",
-		fontSize: 12,
+		"font-family": "myriad-pro-condensed, sans-serif",
+		fontSize: 16,
 		graphMargins: {
 			left: .12,
 			right: .02
@@ -26,8 +26,8 @@ mainGraphic.getChartOptionsObj = function() {
 		chartHeight: 252,
 		barStyle: "normal",
 		barWidthPercent: .8,
-		"font-family": "source-sans-pro, sans-serif",
-		fontSize: 12,
+		"font-family": "myriad-pro-condensed, sans-serif",
+		fontSize: 16,
 		graphMargins: {
 			left: 0,
 			right: .05
@@ -45,8 +45,8 @@ mainGraphic.getChartOptionsObj = function() {
 		chartHeight: 252,
 		barStyle: "normal",
 		barWidthPercent: .8,
-		"font-family": "source-sans-pro, sans-serif",
-		fontSize: 12,
+		"font-family": "myriad-pro-condensed, sans-serif",
+		fontSize: 16,
 		graphMargins: {
 			left: .12,
 			right: .02
@@ -65,8 +65,8 @@ mainGraphic.getChartOptionsObj = function() {
 		chartHeight: 252,
 		barStyle: "normal",
 		barWidthPercent: .8,
-		"font-family": "source-sans-pro, sans-serif",
-		fontSize: 12,
+		"font-family": "myriad-pro-condensed, sans-serif",
+		fontSize: 16,
 		graphMargins: {
 			left: 0,
 			right: .05
@@ -85,8 +85,8 @@ mainGraphic.getChartOptionsObj = function() {
 		chartHeight: 252,
 		barStyle: "normal",
 		barWidthPercent: .8,
-		"font-family": "source-sans-pro, sans-serif",
-		fontSize: 12,
+		"font-family": "myriad-pro-condensed, sans-serif",
+		fontSize: 16,
 		graphMargins: {
 			left: .12,
 			right: .02
@@ -102,8 +102,8 @@ mainGraphic.getChartOptionsObj = function() {
 		chartHeight: 252,
 		barStyle: "normal",
 		barWidthPercent: .8,
-		"font-family": "source-sans-pro, sans-serif",
-		fontSize: 12,
+		"font-family": "myriad-pro-condensed, sans-serif",
+		fontSize: 16,
 		graphMargins: {
 			left: 0,
 			right: .05
@@ -121,8 +121,8 @@ mainGraphic.getChartOptionsObj = function() {
 		chartHeight: 252,
 		barStyle: "normal",
 		barWidthPercent: .8,
-		"font-family": "source-sans-pro, sans-serif",
-		fontSize: 12,
+		"font-family": "myriad-pro-condensed, sans-serif",
+		fontSize: 16,
 		graphMargins: {
 			left: .12,
 			right: .02
@@ -138,8 +138,8 @@ mainGraphic.getChartOptionsObj = function() {
 		chartHeight: 252,
 		barStyle: "normal",
 		barWidthPercent: .8,
-		"font-family": "source-sans-pro, sans-serif",
-		fontSize: 12,
+		"font-family": "myriad-pro-condensed, sans-serif",
+		fontSize: 16,
 		graphMargins: {
 			left: 0,
 			right: .05

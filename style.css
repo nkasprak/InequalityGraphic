@@ -2,13 +2,22 @@
 /* CSS Document */
 
 body {
-	font-family:source-sans-pro-n6, source-sans-pro, sans-serif;
+	font-family:"myriad-pro-condensed",sans-serif;
 	color:#666;	
 	font-size:14px;
 	line-height:15px;
 	margin:0px;
 	padding:0px;
 	
+}
+
+select {
+	font-family:"myriad-pro-condensed",sans-serif;
+	font-size:16px;	
+}
+
+strong {
+	font-weight:600;	
 }
 
 #outermost {
@@ -63,7 +72,7 @@ body {
 	color:#999;
 	text-align:center;
 	padding:5px;
-	font-weight:bold;
+	font-weight:600;
 	font-size:87%;
 	position:relative;
 	/*border-bottom:1px solid #555;*/
@@ -94,7 +103,7 @@ body {
 }*/
 
 #slideSelectArea .slideSelector .numeral {
-	font-size:20px;
+	font-size:24px;
 	width:20%;
 	height:100%;
 	position:absolute;
@@ -109,6 +118,7 @@ body {
 	position:absolute;
 	right:0px;
 	text-align:left;
+	font-size:16px;
 }
 
 #selectSlide1.slideSelector .text {width:85%}
@@ -142,7 +152,7 @@ body {
 	color:#222;	
 }
 
-#popup {
+.popup {
 	display:none;
 	background-color:#eee;
 	border:1px solid #ddd;
@@ -153,8 +163,9 @@ body {
 	top:150px;	
 }
 
-#textDiv{
+.popup .textDiv{
 	margin:10px;
+	font-family:"myriad-pro",sans-serif;	
 }
 
 #playPauseArea, #restartArea {
@@ -185,11 +196,22 @@ body {
 #outermost .chartSlide .chartDescBody {
 	position:relative;
 	height:100px;
+	font-family:"myriad-pro",sans-serif;	
+}
+
+#outermost .chartSlide .chartBelowSliderHeader {
+	font-size:16px;	
 }
 
 #slide1 {
 	visibility:visible;
 	display:block;	
+}
+
+#slide0 .introBlurb {
+	font-family:"myriad-pro",sans-serif;	
+	position:relative;
+	top:-40px;
 }
 
 #slide0 .beginWrapper {
@@ -199,7 +221,9 @@ body {
 	margin-bottom:1em;
 }
 
-.redButton {
+.redButton, .closePopup {
+	font-size:20px;
+	line-height:22px;
 	padding:5px;
 	background-color:#b9292f;
 	color:#fff;
@@ -207,11 +231,16 @@ body {
 	text-align:center;	
 	margin-left:auto;
 	margin-right:auto;
-	width:100px;
+	width:200px;
 	cursor:pointer;
 }
 
-.redButton:hover {
+.closePopup {
+	width:160px;
+	line-height:18px;	
+}
+
+.redButton:hover, .closePopup:hover {
 	text-decoration:underline;	
 }
 
@@ -250,6 +279,10 @@ h1,h2,h3,h4,h5,h6 {
 	height:0px;
 	border-radius:0px;
 	border:none;
+}
+
+#outermost .chartSlide .ui-slider {
+	font-family:"myriad-pro-condensed","sans-serif";	
 }
 
 .chartSlide .ui-slider .ui-slider-handle {
@@ -298,14 +331,18 @@ h1,h2,h3,h4,h5,h6 {
 	position:relative;
 	display:block;
 	font-size:1.5em;	
-	line-height:1.2em;
+	line-height:1.0em;
+	margin-bottom:0.5em;
+	padding-bottom:0.5em;
 	height:2.4em;
+	font-weight:bold;
 }
 
 .chartSlide .animateInner {
 	position:relative;
 	width:100%;
 	overflow:hidden;
+	
 }
 
 .chartSlide .sliderContainer {
@@ -329,7 +366,6 @@ h1,h2,h3,h4,h5,h6 {
 .chartSlide .sliderContainer .sliderHandle .sliderText  {
 	position:absolute;
 	font-weight:bold;
-	font-family:source-sans-pro, sans-serif;
 	color:#555;
 	top:1px;
 	left:19px;
@@ -342,8 +378,8 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .chartSlide .slideTextMargin .slideCharts {
-	postion:relative;
-	height:300px;
+	
+	height:250px;
 }
 
 .chartSlide .slideTextMargin .slideCharts .vertical_divider {
@@ -362,4 +398,8 @@ h1,h2,h3,h4,h5,h6 {
 	position:absolute;
 	right:0px;
 	
+}
+
+.chartSlide p.credits {
+	font-family:"myriad-pro";	
 }

@@ -27,7 +27,7 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		label_appendix:null,
 		label_divideBy:1
 	}
-	this["font-family"] = "Arial, sans-serif";
+	//this["font-family"] = "Arial, sans-serif";
 	this.bar_ops = {};
 	this.bar_ops.color = "#f00";
 	this.bar_ops.border = {};

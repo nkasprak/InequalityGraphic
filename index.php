@@ -3,13 +3,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>CBO Inequality Graphic</title>
-<script src="//use.edgefonts.net/source-sans-pro.js"></script>
+<!--<script src="//use.edgefonts.net/source-sans-pro.js"></script>-->
+<script type="text/javascript" src="//use.typekit.net/fwp7hoy.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 <link rel="stylesheet" href="jquery-ui-1.10.3/css/smoothness/jquery-ui-1.10.3.custom.min.css" />
 <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-<div id="outermost">
+<div id="outermost" class="tk-myriad-pro-condensed">
 	<div id="slideSelectArea">
     	<?php 
 		$tabText = array(
@@ -71,12 +73,13 @@
             	<div id="slide<?php echo $i;?>slider" class="yearSlider"></div>
             </div>
             <p>&nbsp;</p>
-            <div><strong><?php echo $titles[$i];?></strong></div>
+            <div class="chartBelowSliderHeader"><strong><?php echo $titles[$i];?></strong></div>
             <div class="slideCharts">
                 <div id="slide<?php echo $i;?>Canvas" class="leftCanvas"></div>
                 <div class="vertical_divider"><img src="vertical_divider.png" /></div>
                 <div id="slide<?php echo $i;?>RightCanvas" class="rightCanvas"></div>
             </div> <!--end slideCharts-->
+            <p class="credits">CBPP interactive by <a href="http://www.cbpp.org/about/index.cfm?fa=view&id=234">Nick Kasprak</a> and <a href="http://www.cbpp.org/experts/?fa=view&id=50">Chye-Ching Huang</a></p>
 	    </div> <!-- end slideTextMargin-->
     </div> <!--end slide <?php echo $i;?> -->
     <?php endfor; ?>
@@ -87,9 +90,9 @@
     	<p><strong>Explore the data</strong></p>
     </div>    
     </div>-->
-    <div id="popup">
-    	<div id="textDiv"></div>
-        <div id="closePopup" class="redButton">Continue</div>
+    <div class="popup">
+    	<div class="textDiv"></div>
+        <div class="closePopup" class="redButton">Continue</div>
     </div>
     <div id="playPauseArea">
     	<img src="pause_light.png" />

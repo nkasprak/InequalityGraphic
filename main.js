@@ -15,7 +15,7 @@ try {
 		mainGraphic.playing = false;
 		
 		//There are two basic modes of operation - "story" and "explore"
-		mainGraphic.mode = "story";
+		mainGraphic.mode = "explore";
 		
 		//Control start/end year
 		mainGraphic.minYear = 1979;
@@ -64,9 +64,9 @@ try {
 		
 		
 		//Assign some handlers
-		$("#closePopup").click(function() {
+		$(".closePopup").click(function() {
 			try {
-				$("#popup").fadeOut(100);
+				$(".popup").fadeOut(100);
 				mainGraphic.event_fire(eventSequence[mainGraphic.eventIndex]);
 				$("#playPauseArea").show();
 				$("#playPauseArea img").attr("src","pause_light.png");
@@ -86,7 +86,9 @@ try {
 				mainGraphic.hideBlurbs();
 			}
 			if (this.slideClicked == 0) {
-				mainGraphic.enterStoryMode();	
+				$("#restartArea").trigger("click");
+				$("#outermost #restartArea").show();
+				mainGraphic.mode = "explore";	
 			}
 		});
 		
@@ -153,7 +155,7 @@ try {
 			$("#playPauseArea").css("visibility","hidden");
 			$("#restartArea").css("visibility","hidden");
 			mainGraphic.showsOver();
-			
+			mainGraphic.mode="explore";
 			var uiObj = {values: [mainGraphic.minYear, mainGraphic.minYear],value:mainGraphic.minYear};
 			
 			mainGraphic.chartDrawn[1] = false;
@@ -176,6 +178,7 @@ try {
 		$(".beginStory").click(function() {
 			mainGraphic.showsOver();
 			mainGraphic.playing = true;
+			mainGraphic.mode = "story";
 			mainGraphic.chartDrawn[1] = false;
 			mainGraphic.chartDrawn[2] = false;
 			mainGraphic.chartDrawn[3] = false;

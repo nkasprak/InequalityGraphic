@@ -23,7 +23,7 @@ mainGraphic.event_fire = function(eventParams) {
 				mainGraphic.popupsShown[eventParams[0]] = true;
 				
 				//..and use the text.
-				$("#popup #textDiv").html(text);
+				$(".popup .textDiv").html(text);
 				
 				//Switch to the slide associated with the event if we're not already on it
 				mainGraphic.changeSlide(eventParams[0]);
@@ -34,7 +34,7 @@ mainGraphic.event_fire = function(eventParams) {
 				$("#slide" + eventParams[0] + "body .animateInner").html(mainGraphic.textSnippets[mainGraphic.textConfig[eventParams[0]][year][1]]);
 				
 				//Make the popup visible
-				$("#popup").fadeIn(100);
+				$(".popup").fadeIn(100);
 				
 			} else {
 				
