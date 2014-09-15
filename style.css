@@ -11,6 +11,15 @@ body {
 	
 }
 
+a {
+	text-decoration:none;	
+	color:#3e81b6;
+}
+
+a:hover {
+	text-decoration:underline;	
+}
+
 select {
 	font-family:"myriad-pro-condensed",sans-serif;
 	font-size:16px;	
@@ -347,7 +356,7 @@ h1,h2,h3,h4,h5,h6 {
 
 .chartSlide .sliderContainer {
 	margin-left:30px;
-	width:474px;
+	width:446px;
 	position:relative;
 }
 
@@ -401,5 +410,6 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .chartSlide p.credits {
-	font-family:"myriad-pro";	
+	font-family:"myriad-pro";
+	font-size:12px;	
 }

@@ -209,7 +209,6 @@ mainGraphic.tryDraw = function(barChartObjects, barChartCanvases, timerID, dataA
 		
 		//If none of them are...
 		if (inMotion == false) {
-			
 			//loop through the charts again...
 			for (var barChartIndex = 0; barChartIndex < barChartObjects.length; barChartIndex++) {
 				
@@ -221,11 +220,10 @@ mainGraphic.tryDraw = function(barChartObjects, barChartCanvases, timerID, dataA
 				
 			}
 		} else {
-			
 			//If the charts are still in motion, check back in 20 milliseconds.
 			mainGraphic.timers[timerID] = setTimeout(function () {
 				mainGraphic.tryDraw(barChartObjects, barChartCanvases, timerID, dataArrs, dataOptionsArrs);
-			}, 20);
+			}, 5);
 		}
 	} catch (ex) {
 		console.log(ex);	
@@ -324,6 +322,7 @@ mainGraphic.sliderChangeFunction = function (event, ui, chartNumber) {
 	
 	//Closure function to slide text in and out.
 	function slideText(text, selector) {
+		clearTimeout(mainGraphic.textSlidingTimer[selector]);
 		if (mainGraphic.textSliding[selector] == true) {
 			mainGraphic.textSlidingTimer[selector] = setTimeout(function() {
 				slideText(text,selector);
