@@ -118,6 +118,7 @@ Raphael.fn.barchart = function(chartdata,ops) {
 				}
 			}
 		}
+		if (Math.abs(this.yMax - this.yMin) < 0.01) this.yMax += (0.01 - Math.abs(this.yMax - this.yMin)); 
 	}
 
 	this.setZeroPoint = function() {
@@ -155,7 +156,7 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		while (y <= this.yMax) {
 			if (y==0) roundMag = 1;
 			else {
-				var decimals = 10-Math.ceil(Math.log(y));
+				var decimals = 10-Math.ceil(Math.log(Math.abs(y)));
 				var roundMag = Math.pow(10,decimals);
 			}
 			
@@ -166,7 +167,7 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		while (y >= this.yMin) {
 			if (y==0) roundMag = 1;
 			else {
-				var decimals = 10-Math.ceil(Math.log(y));
+				var decimals = 10-Math.ceil(Math.log(Math.abs(y)));
 				var roundMag = Math.pow(10,decimals);
 			}
 			
@@ -328,19 +329,21 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		
 		this.prepareSignChanges();
 	}
-	
-	this.updateData = function(data,ops) {
-		
+	this.updateMaxMinFromData = function(data,ops) {
 		this.cycleYs();
-		
-		//loop through data first time to determine min/max values
 		this.determineMaxMin(data);
 		
 		if (ops) {
 			if (ops.yMax) this.yMax = ops.yMax;
 			if (ops.yMin) this.yMin = ops.yMin;	
 		}
-
+	}
+	this.updateData = function(data,ops) {
+		
+		
+		
+		//loop through data first time to determine min/max values
+		
 		this.setZeroPoint();
 		
 		this.toDraw = {};
@@ -364,7 +367,7 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		
 		
 	}
-	
+	this.updateMaxMinFromData(data,ops)
 	this.updateData(data,ops);
 
 	this.draw = function (canvas, length) {
@@ -611,9 +614,9 @@ Raphael.fn.barchart = function(chartdata,ops) {
 				
 				//start animation but remove element completely at the end.
 					
-				labelToRemove.animateWith(dummyRect,animationSyncObject,Raphael.animation({"fill-opacity":0,y:newYval},length,null,function() {this.remove();}));
+				if (labelToRemove) labelToRemove.animateWith(dummyRect,animationSyncObject,Raphael.animation({"fill-opacity":0,y:newYval},length,null,function() {this.remove();}));
 				
-				toRemove.animateWith(dummyRect,animationSyncObject,Raphael.animation({"stroke-opacity":0,path:pathString},length,null,function() {this.remove();}));
+				if (toRemove) toRemove.animateWith(dummyRect,animationSyncObject,Raphael.animation({"stroke-opacity":0,path:pathString},length,null,function() {this.remove();}));
 			}
 		}
 		if (deleteAtEnd) {

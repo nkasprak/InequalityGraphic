@@ -46,10 +46,21 @@ mainGraphic.applySliderConfig = function() {
 			slide: function (event, ui) {
 				mainGraphic.sliderChangeFunction(event, ui, 4);
 			}	
+		},
+		5: {
+			range: false,
+			min: mainGraphic.minYear,
+			max: mainGraphic.maxYear,
+			value: mainGraphic.minYear, 
+			step: 1,
+			start: mainGraphic.pauseEverything,
+			slide: function (event, ui) {
+				mainGraphic.sliderChangeFunction(event, ui, 5);
+			}	
 		}
 	};
 	
-	for (var i = 1;i<=4;i++) {
+	for (var i = 1;i<=5;i++) {
 		$("#slide" + i + "slider").slider(mainGraphic.sliderConfigs[i]);
 	}
 };

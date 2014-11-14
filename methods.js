@@ -177,20 +177,21 @@ mainGraphic.styleSliderHandles = function(chartIndex) {
 //Hide all the text that would otherwise appear (for explore mode)
 mainGraphic.hideBlurbs = function() {
 	$(".chartDescHeader, .chartDescBody").hide();
-	$(".vertical_divider").css("top","70px");
+	//$(".vertical_divider").css("top","70px");
 };
 
 //Unhide that text
 mainGraphic.showBlurbs = function() {
 	if (mainGraphic.mode == "story") {
 		$(".chartDescHeader, .chartDescBody").slideDown(600);
-		$(".vertical_divider").css("top","270px");
+		//$(".vertical_divider").css("top","270px");
 	}
 };
 
 //Try to update the chart with a new data point.
 mainGraphic.tryDraw = function(barChartObjects, barChartCanvases, timerID, dataArrs, dataOptionsArrs) {
 	try {
+	
 		try {
 			clearTimeout(mainGraphic.timers[timerID]);
 		} catch (ex) {
@@ -210,13 +211,28 @@ mainGraphic.tryDraw = function(barChartObjects, barChartCanvases, timerID, dataA
 		//If none of them are...
 		if (inMotion == false) {
 			//loop through the charts again...
+			var yMax=0,yMin=0;
 			for (var barChartIndex = 0; barChartIndex < barChartObjects.length; barChartIndex++) {
 				
+				//Find the max min...
+				barChartObjects[barChartIndex].updateMaxMinFromData(dataArrs[barChartIndex], dataOptionsArrs[barChartIndex]);
+				yMax = Math.max(yMax,barChartObjects[barChartIndex].yMax);
+				yMin = Math.min(yMin,barChartObjects[barChartIndex].yMin);
+			}
+			
+			for (var barChartIndex = 0; barChartIndex < barChartObjects.length; barChartIndex++) {
+				//sync the max/min...
+				barChartObjects[barChartIndex].yMax = yMax;
+				barChartObjects[barChartIndex].yMin = yMin;
+				
+				
+			
 				//Update the chart's underlying data...
 				barChartObjects[barChartIndex].updateData(dataArrs[barChartIndex], dataOptionsArrs[barChartIndex]);
 				
 				//and redraw it.
 				barChartObjects[barChartIndex].draw(barChartCanvases[barChartIndex], 200);
+				
 				
 			}
 		} else {
@@ -230,6 +246,17 @@ mainGraphic.tryDraw = function(barChartObjects, barChartCanvases, timerID, dataA
 	}
 };
 
+mainGraphic.disableSlider = function() {
+	for (var i = 1;i<=5;i++) {
+		$("#slide" + i + "slider").slider("disable");
+	}
+};
+
+mainGraphic.enableSlider = function() {
+	for (var i = 1;i<=5;i++) {
+		$("#slide" + i + "slider").slider("enable");
+	}
+};
 
 mainGraphic.pauseEverything = function() {
 	if (mainGraphic.playingStarted==true) {
@@ -393,15 +420,24 @@ mainGraphic.sliderChangeFunction = function (event, ui, chartNumber) {
 		var gData = mainGraphic.assignData(ui,chartNumber);
 		var chartData = gData.data1;
 		var chartData2 = gData.data2;
-		mainGraphic.customMax = gData.customMax;
-		mainGraphic.customMin = gData.customMin;
+		delete mainGraphic.customMax;
+		delete mainGraphic.customMin;
+		if (gData.customMax) mainGraphic.customMax = gData.customMax;
+		if (gData.customMin) mainGraphic.customMin = gData.customMin;
 		
 		//Get chart options configuration object from chartOptions.js
+		
 		var ops = mainGraphic.getChartOptionsObj();
-		ops[chartNumber].left.yMax = mainGraphic.customMax;
-		ops[chartNumber].left.yMin = mainGraphic.customMin;
-		ops[chartNumber].right.yMax = mainGraphic.customMax;
-		ops[chartNumber].right.yMin = mainGraphic.customMin;
+		if (mainGraphic.customMax) {
+			ops[chartNumber].left.yMax = mainGraphic.customMax;
+			ops[chartNumber].left.yMin = mainGraphic.customMin;
+		} 
+		if (mainGraphic.customMin) {
+			ops[chartNumber].right.yMax = mainGraphic.customMax;
+			ops[chartNumber].right.yMin = mainGraphic.customMin;
+		} 
+
+		//console.log(ops[chartNumber]);
 
 		//If we haven't created the object yet, create it
 		if (typeof (mainGraphic[chartToDraw]) == "undefined") mainGraphic[chartToDraw] = {};
@@ -438,6 +474,7 @@ mainGraphic.sliderChangeFunction = function (event, ui, chartNumber) {
 		}
 
 		
+		
 		mainGraphic.tryDraw(
 			[mainGraphic[chartToDraw].left, mainGraphic[chartToDraw].right], 
 			[mainGraphic.canvases["slide" + chartToDraw + "left"], mainGraphic.canvases["slide" + chartToDraw + "right"]], 
@@ -445,6 +482,8 @@ mainGraphic.sliderChangeFunction = function (event, ui, chartNumber) {
 			[chartData.data, chartData2.data], 
 			[ops[chartNumber].left, ops[chartNumber].right]
 		);
+		
+		
 		
 		
 	} catch (ex) {

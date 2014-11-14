@@ -1,6 +1,8 @@
 try {
 	var loadTime = Date.now();
 	$(document).ready(function () {
+		
+		
 	
 		//Keep track of which charts are drawn.
 		mainGraphic.chartDrawn = [];
@@ -19,7 +21,31 @@ try {
 		
 		//Control start/end year
 		mainGraphic.minYear = 1979;
-		mainGraphic.maxYear = 2010;
+		mainGraphic.maxYear = 2011;
+		
+		function drawSliderLines() {
+			for (var year=mainGraphic.minYear;year<=mainGraphic.maxYear;year++) {
+				var percent = Math.round((year-mainGraphic.minYear)/(mainGraphic.maxYear-mainGraphic.minYear)*1000)/10;
+				var style = "left:" + percent + "%";
+				if (year%5==0) {
+					style += ";height:10px;top:-5px;"
+				} 
+				if ($.inArray(year,[1980,1990,2000,2010]) >= 0) {
+					$(".yearSliderAutoGen .hLine").append("<div class=\"yLabel\" style=\"left:" + percent + "%\"><div>" + year + "</div></div>");
+				}
+				
+				$(".yearSliderAutoGen .hLine").append("<div class=\"vLine\" style=\"" + style + "\">");
+			}
+		}
+		function makeYearSelector() {
+			for (var year=1978;year<=2013;year++) {
+				$("#yearSelector").append("<option value=\"" + year + "\">" + year + "</option>");
+			}
+		}
+	
+		makeYearSelector();
+	
+		drawSliderLines();
 		
 		//Gets set to true once the "tell the story" button is clicked and keeps track of
 		//whether the play/pause/restart buttons are visible.
@@ -51,6 +77,8 @@ try {
 		mainGraphic.textSliding = {};
 		mainGraphic.textSlidingTimer = {};
 		
+		mainGraphic.introAllowed = true;
+		
 		for (var chartIndex = 1; chartIndex <= 5; chartIndex++) {
 			mainGraphic.styleSliderHandles(chartIndex);
 		}
@@ -66,7 +94,9 @@ try {
 		//Assign some handlers
 		$(".closePopup").click(function() {
 			try {
+				mainGraphic.introAllowed = true;
 				$(".popup").fadeOut(100);
+				mainGraphic.enableSlider();
 				mainGraphic.event_fire(eventSequence[mainGraphic.eventIndex]);
 				$("#playPauseArea").show();
 				$("#playPauseArea img").attr("src","pause_light.png");
@@ -77,6 +107,7 @@ try {
 					
 		$(".slideSelector").click(function () {
 			this.slideClicked = this.id.slice(11);
+			if (!mainGraphic.introAllowed && this.slideClicked == 0) return false;
 			if (mainGraphic.mode == "explore" && (this.slideClicked != 0 && this.slideClicked != 5)) {
 				return false;
 			}
@@ -86,6 +117,7 @@ try {
 				mainGraphic.hideBlurbs();
 			}
 			if (this.slideClicked == 0) {
+				
 				$("#restartArea").trigger("click");
 				$("#outermost #restartArea").show();
 				mainGraphic.mode = "explore";	
@@ -176,7 +208,9 @@ try {
 		});
 		
 		$(".beginStory").click(function() {
+			mainGraphic.introAllowed = false;
 			mainGraphic.showsOver();
+			mainGraphic.disableSlider();
 			mainGraphic.playing = true;
 			mainGraphic.mode = "story";
 			mainGraphic.chartDrawn[1] = false;

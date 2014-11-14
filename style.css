@@ -169,7 +169,7 @@ strong {
 	width:96%;
 	height:115px;
 	margin:2%;
-	top:150px;	
+	top:70px;	
 }
 
 .popup .textDiv{
@@ -202,6 +202,15 @@ strong {
 	visibility:hidden;
 }
 
+#outermost .chartSlide .chartDesc {
+	height:90px;
+	position:relative;	
+}
+
+#slide5.chartSlide .chartDesc {
+	height:0px;	
+}
+
 #outermost .chartSlide .chartDescBody {
 	position:relative;
 	height:100px;
@@ -210,6 +219,45 @@ strong {
 
 #outermost .chartSlide .chartBelowSliderHeader {
 	font-size:16px;	
+}
+
+.yearSliderAutoGen {
+	margin-top:20px;
+	height:40px;
+	border:0px;
+	background:#fff;
+	width:90%;
+	left:5%;
+}
+
+.yearSliderAutoGen .hLine {
+	position:absolute;
+	background-color:#aaa;
+	height:1px;
+	width:100%;
+	top:40px;
+	left:2px;	
+}
+
+.yearSliderAutoGen .yLabel {
+	position:absolute;	
+	font-family:"myriad-pro-condensed";
+	font-size:16px;
+	color:#aaa;
+	top:5px;
+}
+
+.yearSliderAutoGen .yLabel div {
+	position:relative;
+	left:-12px;
+}
+
+.yearSliderAutoGen .vLine {
+	position:absolute;
+	background-color:#aaa;
+	width:1px;
+	height:6px;
+	top:-3px;
 }
 
 #slide1 {
@@ -343,7 +391,6 @@ h1,h2,h3,h4,h5,h6 {
 	line-height:1.0em;
 	margin-bottom:0.5em;
 	padding-bottom:0.5em;
-	height:2.4em;
 	font-weight:bold;
 }
 
@@ -387,13 +434,13 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .chartSlide .slideTextMargin .slideCharts {
-	
+	position:relative;
 	height:250px;
 }
 
 .chartSlide .slideTextMargin .slideCharts .vertical_divider {
 	left:413px;
-	top:270px;	
+	top:0px;	
 	position:absolute;
 }
 

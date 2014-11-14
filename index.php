@@ -48,13 +48,16 @@
 		"Average after-tax income, in 2010 dollars",
 		"Share of after-tax income",
 		"Average share of income owed in federal taxes",
+		"Percentage change in before tax income since 1979",
 		""
 	);
 	function outputExploreSelector() {
-		global $titles; ?>
+		global $titles; 
+		$selectOrder = array(1,5,2,3,4);
+		?>
 		<select class="exploreSelector">
-        	<?php for ($i=1;$i<=4;$i++) : ?>
-            <option value="<?php echo $i;?>"><?php echo $titles[$i];?></option>
+        	<?php for ($i=0;$i<=4;$i++) : ?>
+            <option value="<?php echo $selectOrder[$i];?>"><?php echo $titles[$selectOrder[$i]];?></option>
             <?php endfor; ?>
         </select>
 	<?php }; 
@@ -62,14 +65,18 @@
     <div id="slide<?php echo $i; ?>" class="chartSlide">
     	<?php if ($i==5) outputExploreSelector(); ?>
     	<div class="slideTextMargin">
-        	<div class="chartDescHeader" id="slide<?php echo $i;?>title">
-            	<div class="animateInner"></div>
+        	<div class="chartDesc">
+                <div class="chartDescHeader" id="slide<?php echo $i;?>title">
+                    <div class="animateInner"></div>
+                </div>
+               
+                <div class="chartDescBody" id="slide<?php echo $i;?>body"><div class="animateInner"></div></div>
             </div>
            
-           	<div class="chartDescBody" id="slide<?php echo $i;?>body"><div class="animateInner"></div></div>
-            <p>&nbsp;</p>
             <div class="sliderContainer">
-                <div class="sliderGrid"><img src="slider_grid.png" /></div>
+                <div class="yearSliderAutoGen">
+                	<div class="hLine"></div>
+                </div>
             	<div id="slide<?php echo $i;?>slider" class="yearSlider"></div>
             </div>
             <p>&nbsp;</p>
