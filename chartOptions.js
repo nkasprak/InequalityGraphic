@@ -75,7 +75,9 @@ mainGraphic.getChartOptionsObj = function() {
 			label_hidden: true,
 			label_percent: false,
 			label_commas: true,
-			label_prefix: "$"
+			label_prefix: "$",
+			label_divideBy: 1000,
+			label_appendix: "K"
 		}
 	};
 	
@@ -110,7 +112,8 @@ mainGraphic.getChartOptionsObj = function() {
 		},
 		gridOps: {
 			label_hidden: true,
-			label_percent: false
+			label_percent: true,
+			label_commas: false
 		}
 	
 	};
@@ -146,9 +149,9 @@ mainGraphic.getChartOptionsObj = function() {
 		},
 		gridOps: {
 			label_hidden: true,
-			label_percent: true
+			label_percent: true,
+			label_commas: true
 		}
-	
 	};
 	
 	ops[5] = {};
@@ -182,9 +185,9 @@ mainGraphic.getChartOptionsObj = function() {
 		},
 		gridOps: {
 			label_hidden: true,
-			label_percent: true
+			label_percent: true,
+			label_commas: true
 		}
-	
 	};
 	
 	return ops;

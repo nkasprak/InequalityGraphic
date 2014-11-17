@@ -40,7 +40,8 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		if (ops.barStyle) this.barStyle = ops.barStyle;
 		if (ops.defGridlines) this.defGridlines = ops.defGridlines;
 		if (ops.chartHeight) this.chartHeight = ops.chartHeight;
-		if (ops.chartWidth) this.chartWidth = ops.chartWidth;	
+		if (ops.chartWidth) this.chartWidth = ops.chartWidth;
+		if (ops.tooltips) this.tooltips = ops.tooltips;	
 		if (ops["font-family"]) this["font-family"] = ops["font-family"];
 		if (ops.graphMargins) {
 			for (var graphMargin in ops.graphMargins) {
@@ -285,7 +286,8 @@ Raphael.fn.barchart = function(chartdata,ops) {
 										x: Math.round(barXOff*1000)/1000,
 										y: Math.round(barYOff*1000)/1000,
 										width: Math.round(barWidth*1000)/1000,
-										height: Math.round(barHeight*1000)/1000};
+										height: Math.round(barHeight*1000)/1000,
+										value: dataPoint};
 				//Add attributes to bars - precedence based on point - series - chart
 				attrArray = ["color","border"];
 				
@@ -371,7 +373,6 @@ Raphael.fn.barchart = function(chartdata,ops) {
 	this.updateData(data,ops);
 
 	this.draw = function (canvas, length) {
-		
 		//get id of canvas to avoid namespace conflicts
 		this.inMotion = true;
 		var parentID = canvas.canvas.parentNode.id;
@@ -406,6 +407,29 @@ Raphael.fn.barchart = function(chartdata,ops) {
 		function animationDone() {
 			this.parentCanvas.inMotion = false;
 		}
+		function formatLabel(theNumber, chartObj) {
+			
+			if (chartObj.gridOps.label_divideBy) {
+				theNumber = theNumber/chartObj.gridOps.label_divideBy;
+			}
+			
+			if (chartObj.gridOps.label_percent == true) {
+				theNumber = theNumber*1;
+				theNumber = Math.round((theNumber*100)) + "%";
+			}
+			
+			if (chartObj.gridOps.label_commas) {
+				theNumber = chartObj.commaSeparateNumber(theNumber);
+			}
+			if (chartObj.gridOps.label_prefix) {
+				theNumber = chartObj.gridOps.label_prefix + theNumber;	
+			}
+			if (chartObj.gridOps.label_appendix) {
+				theNumber = theNumber + chartObj.gridOps.label_appendix;
+			}
+			
+			return theNumber;
+		}
 		
 		//Loop through all elements in the toDraw list and handle appropriately.
 		for (var elem in this.toDraw) {
@@ -419,6 +443,7 @@ Raphael.fn.barchart = function(chartdata,ops) {
 						//Case where bar already exists in chart. Need to animate change.
 						
 						var elemObj = canvas.getById(document.getElementById(elemID).raphaelid);
+						elemObj.data("data-point",chartObj.toDraw[elem].value);
 						var halfwayZeroPoint;
 						elemObj.animateWith(dummyRect,animationSyncObject,Raphael.animation(
 							{	
@@ -454,8 +479,25 @@ Raphael.fn.barchart = function(chartdata,ops) {
 								chartObj.toDraw[elem].width,
 								chartObj.toDraw[elem].height);
 						elemObj.attr("fill",chartObj.toDraw[elem].color);
+						elemObj.data("data-point",chartObj.toDraw[elem].value);
 						elemObj.attr("stroke",chartObj.toDraw[elem].border.color);
 						elemObj.attr("stroke-width",chartObj.toDraw[elem].border.width);
+						if (chartObj.tooltips) {
+							elemObj.hover(function(e) {
+								if (typeof(chartObj.tooltip)=="undefined") chartObj.tooltip = document.createElement("div");
+								chartObj.tooltip.style.position="absolute";
+								chartObj.tooltip.style.top=(this.attr("y")-17) + "px";
+								chartObj.tooltip.style.fontSize="18px";
+								chartObj.tooltip.innerHTML = "<b>" + formatLabel(this.data("data-point"),chartObj) + "</b>";
+								chartObj.tooltip.style.color = this.attr("fill");
+								canvas.canvas.parentNode.appendChild(chartObj.tooltip);
+								chartObj.tooltip.style.left=(this.attr("x") + this.attr("width")/2 - chartObj.tooltip.offsetWidth/2) + "px";
+								
+							}, function(e) {
+								if (chartObj.tooltip) canvas.canvas.parentNode.removeChild(chartObj.tooltip);
+								delete chartObj.tooltip;
+							});
+						}
 						elemObj.node.id = elemID;
 					}
 				})(this);
@@ -506,24 +548,8 @@ Raphael.fn.barchart = function(chartdata,ops) {
 							elemObj.attr("stroke",chartObj.gridOps.color);
 						}
 						
-						if (chartObj.gridOps.label_divideBy) {
-							label = label/chartObj.gridOps.label_divideBy;
-						}
 						
-						if (chartObj.gridOps.label_percent == true) {
-							label = label*1;
-							label = Math.round((label*100)) + "%";
-						}
-						
-						if (chartObj.gridOps.label_commas) {
-							label = chartObj.commaSeparateNumber(label);
-						}
-						if (chartObj.gridOps.label_prefix) {
-							label = chartObj.gridOps.label_prefix + label;	
-						}
-						if (chartObj.gridOps.label_appendix) {
-							label = label + chartObj.gridOps.label_appendix;
-						}
+						label = formatLabel(label, chartObj);
 						
 						elemObj.toBack(); //needs to go behind bars
 						elemObj.attr("stroke-opacity",0);

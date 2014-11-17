@@ -45,7 +45,7 @@
 	$titles = array(
 		"",
 		"Percentage change in after tax income since 1979",
-		"Average after-tax income, in 2010 dollars",
+		"Average after-tax income, in 2011 dollars",
 		"Share of after-tax income",
 		"Average share of income owed in federal taxes",
 		"Percentage change in before tax income since 1979",
@@ -86,7 +86,9 @@
                 <div class="vertical_divider"><img src="vertical_divider.png" /></div>
                 <div id="slide<?php echo $i;?>RightCanvas" class="rightCanvas"></div>
             </div> <!--end slideCharts-->
-            <p class="credits">CBPP data visualization by <a href="http://www.cbpp.org/about/index.cfm?fa=view&id=234">Nick Kasprak</a>, <a href="http://www.cbpp.org/experts/?fa=view&id=50">Chye-Ching Huang</a>, and <a href="http://www.cbpp.org/about/index.cfm?fa=view&id=229">Rob Cady</a></p>
+            
+            
+           
 	    </div> <!-- end slideTextMargin-->
     </div> <!--end slide <?php echo $i;?> -->
     <?php endfor; ?>
@@ -107,6 +109,18 @@
     <div id="restartArea">
     	<img src="restart_light.png" />
     </div>
+    
+    <div class="credits">
+    <div class="embedCode">
+      <p><strong>Embed code:</strong> <span class="embedLink">(Close)</span></p>
+      <div class="embedCodeArea">&lt;iframe src=&quot;<span class="embedDomain"></span>&quot; frameborder=&quot;0&quot; width=&quot;525&quot; height=&quot;1260&quot; scrolling=&quot;no&quot; &gt;&lt;/iframe&gt;</div>
+    </div>
+    <p class="embedLink">Embed this graphic on your own site </p>
+    <p>CBPP data visualization by <a target="_blank" href="http://www.cbpp.org/about/index.cfm?fa=view&id=234">Nick Kasprak</a>, <a target="_blank" href="http://www.cbpp.org/experts/?fa=view&id=50">Chye-Ching Huang</a>, and <a target="_blank" href="http://www.cbpp.org/about/index.cfm?fa=view&id=229">Rob Cady</a></p>
+    <div id="cbppCredit">Center on Budget and Policy Priorities | <a href="http://www.cbpp.org" target="_blank">cbpp.org</a></div>
+  </div>
+    
+     
 </div> <!-- end div outermost -->
 
 <script type="text/javascript" src = "raphael-min.js"></script>

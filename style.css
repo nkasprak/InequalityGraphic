@@ -456,7 +456,60 @@ h1,h2,h3,h4,h5,h6 {
 	
 }
 
-.chartSlide p.credits {
+div.credits {
 	font-family:"myriad-pro";
+	font-size:12px;
+	position:absolute;
+	top:600px;	
+	width:100%;
+	padding:5px;
+}
+
+div.credits p {
+	font-size:12px;
+	padding:0em;
+	margin:0em;
+}
+
+#cbppCredit {
+	border-top:1px solid #aaa;
 	font-size:12px;	
+	margin-top:5px;
+	padding-top:3px;
+	text-align:right;
+	color:#0081a4;
+	margin-right:3px;
+}
+
+.embedLink {
+	color:#0081a4;
+	clear:both;
+	cursor:pointer;
+}
+
+.embedLink:hover {
+	text-decoration:underline;
+}
+
+div.embedCode {
+	display:none;	
+	position:absolute;
+	height:5em;
+	bottom:50px;
+	border:1px solid #000;
+	z-index:100;
+	left:5px;
+	width:98%;
+	max-width:525px;
+	background-color:#fff;
+	padding:5px;
+}
+
+div.embedCodeArea {
+	font-family:"Courier New", Courier, monospace;
+	position:relative;
+	top:10px;
+	background-color:#fff;
+	font-size:12px;
+	
 }

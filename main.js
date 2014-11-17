@@ -221,6 +221,15 @@ try {
 			mainGraphic.event_fire(eventSequence[mainGraphic.eventIndex]);
 		});
 		
+		$("span.embedDomain").html(document.URL);
+		$(".embedLink").click(function() {
+			if ($("div.embedCode").is(":visible")) {
+				$("div.embedCode").fadeOut(200);
+			} else {
+				$("div.embedCode").fadeIn(200);	
+			}
+		});
+		
 		mainGraphic.changeSlide(0);
 	});
 

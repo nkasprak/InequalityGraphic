@@ -435,6 +435,13 @@ mainGraphic.sliderChangeFunction = function (event, ui, chartNumber) {
 		if (mainGraphic.customMin) {
 			ops[chartNumber].right.yMax = mainGraphic.customMax;
 			ops[chartNumber].right.yMin = mainGraphic.customMin;
+		}
+		if (mainGraphic.mode=="explore") {
+			ops[chartNumber].left.tooltips = true;
+			ops[chartNumber].right.tooltips = true;
+		} else {
+			ops[chartNumber].left.tooltips = false;
+			ops[chartNumber].right.tooltips = false;
 		} 
 
 		//console.log(ops[chartNumber]);
@@ -472,8 +479,6 @@ mainGraphic.sliderChangeFunction = function (event, ui, chartNumber) {
 			$("#chart" + chartToDraw + "_lowerSliderText").text(ui.values[0]);
 			$("#chart" + chartToDraw + "_upperSliderText").text(ui.values[1]);
 		}
-
-		
 		
 		mainGraphic.tryDraw(
 			[mainGraphic[chartToDraw].left, mainGraphic[chartToDraw].right], 
