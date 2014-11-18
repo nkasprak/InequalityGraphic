@@ -271,7 +271,7 @@ mainGraphic.assignData = function(ui,chartNumber) {
 				title: "",
 				labels: ["Top 1%"]
 			},	  
-			customMax: 1373700,
+			customMax: 1425000,
 			custonMin: 0
 		};
 		break;

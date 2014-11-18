@@ -129,7 +129,7 @@ try {
 		});
 		
 		$(".exploreSelector").change(function() {
-
+			var selector = this;
 			mainGraphic.mode = "explore";
 			var chartNumber = $(this).val();
 			if (mainGraphic[5]) {
@@ -140,7 +140,10 @@ try {
 			
 			mainGraphic.canvases["slide5left"] = Raphael("slide5Canvas", 403, 252);
 			mainGraphic.canvases["slide5right"] = Raphael("slide5RightCanvas", 81, 252);
-			
+			$("#slide5 div.chartBelowSliderHeader").fadeOut(200,null,function() {
+				$("#slide5 div.chartBelowSliderHeader strong").html($(selector).children("option").filter(":selected").text());
+				$("#slide5 div.chartBelowSliderHeader").fadeIn(200);
+			});
 
 			$("#slide5slider").remove();
 			
