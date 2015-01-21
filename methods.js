@@ -57,13 +57,18 @@ mainGraphic.event_fire = function(eventParams) {
 			//Check to make sure it's not on the last event. 
 			if (mainGraphic.eventIndex < mainGraphic.eventSequence.length-1) {
 				
-				//Set a timer to run the next event based on the event length (eventParms[3])
-				mainGraphic.mainGlobalEventTimer = setTimeout(function() {
-					mainGraphic.event_fire(mainGraphic.eventSequence[mainGraphic.eventIndex])
-				},eventParams[3]*1000);
+				if (eventParams[3] == "wait") {
+					mainGraphic.showContinueButton();
+				} else {
 				
-				//Increment the event tracker
-				mainGraphic.eventIndex++;
+					//Set a timer to run the next event based on the event length (eventParms[3])
+					mainGraphic.mainGlobalEventTimer = setTimeout(function() {
+						mainGraphic.event_fire(mainGraphic.eventSequence[mainGraphic.eventIndex])
+					},eventParams[3]*1000);
+					
+					//Increment the event tracker
+					mainGraphic.eventIndex++;
+				}
 			}
 			
 			//If there's a function to execute, execute it.
@@ -77,6 +82,8 @@ mainGraphic.event_fire = function(eventParams) {
 		
 		//Check if there's a previous event
 		if (mainGraphic.eventSequence[mainGraphic.eventIndex-1]) { //There is a previous event
+			
+			mainGraphic.returnToEvent = mainGraphic.eventIndex;
 		
 			//Check if the previous event is on the same slide, or if 
 			if ((mainGraphic.eventSequence[mainGraphic.eventIndex][0] == mainGraphic.eventSequence[mainGraphic.eventIndex-1][0]) || mainGraphic.popupsShown[eventParams[0]]) {
@@ -94,6 +101,27 @@ mainGraphic.event_fire = function(eventParams) {
 	} catch (ex) {
 		console.log(ex);	
 	}
+};
+
+mainGraphic.showContinueButton= function() {
+	$("#continueArea").fadeIn();
+	$("#playPauseArea img").hide();
+	//$(".sliderContainer").fadeTo(.5);
+	//mainGraphic.disableSlider();
+}
+
+mainGraphic.hideContinueButton = function() {
+	$("#playPauseArea img").show();
+	$("#continueArea").fadeOut();
+	//$('.sliderContainer').fadeIn();
+	//mainGraphic.enableSlider();
+}
+
+mainGraphic.continueButton = function() {
+	mainGraphic.hideContinueButton();
+	mainGraphic.eventIndex++;
+	mainGraphic.event_fire(mainGraphic.eventSequence[mainGraphic.eventIndex]);
+	
 };
 
 //Switch to a new slide.
@@ -233,7 +261,6 @@ mainGraphic.tryDraw = function(barChartObjects, barChartCanvases, timerID, dataA
 				//and redraw it.
 				barChartObjects[barChartIndex].draw(barChartCanvases[barChartIndex], 200);
 				
-				
 			}
 		} else {
 			//If the charts are still in motion, check back in 20 milliseconds.
@@ -325,6 +352,7 @@ mainGraphic.showsOver = function() {
 	mainGraphic.eventIndex=0;
 	mainGraphic.pauseEverything();
 	$("#playPauseArea").hide();
+	$("#continueArea").hide();
 };
 
 //Switch to explore mode
@@ -332,6 +360,7 @@ mainGraphic.enterExploreMode = function() {
 	mainGraphic.mode = "explore";
 	mainGraphic.hideBlurbs();
 	$("#playPauseArea, #restartArea").hide();
+	$("#continueArea").hide();
 };
 
 //Switch to story mode
@@ -453,6 +482,8 @@ mainGraphic.sliderChangeFunction = function (event, ui, chartNumber) {
 		if (mainGraphic[chartToDraw].left) {} else {
 			mainGraphic[chartToDraw].left = new Raphael.fn.barchart(chartData, ops[chartNumber].left);
 		}
+		
+		
 
 		//If we haven't created the right chart yet, create it
 		if (mainGraphic[chartToDraw].right) {} else {
@@ -488,7 +519,7 @@ mainGraphic.sliderChangeFunction = function (event, ui, chartNumber) {
 			[ops[chartNumber].left, ops[chartNumber].right]
 		);
 		
-		
+		mainGraphic.hideContinueButton();
 		
 		
 	} catch (ex) {

@@ -109,6 +109,9 @@
     <div id="restartArea">
     	<img src="restart_light.png" />
     </div>
+    <div id="continueArea">
+    	<div class="redButton" id="continueButton">Continue</div>
+    </div>
     
     <div class="credits">
     <div class="embedCode">

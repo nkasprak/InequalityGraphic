@@ -194,6 +194,13 @@ strong {
 	left:259px;
 }
 
+#continueArea {
+	display:none;
+	position:absolute;
+	left:150px;
+	top:240px;
+}
+
 #outermost .chartSlide {
 	display:block;
 	position:absolute;
@@ -203,7 +210,7 @@ strong {
 }
 
 #outermost .chartSlide .chartDesc {
-	height:90px;
+	height:120px;
 	position:relative;	
 }
 

@@ -189,6 +189,7 @@ try {
 			mainGraphic.playing = false;
 			$("#playPauseArea").css("visibility","hidden");
 			$("#restartArea").css("visibility","hidden");
+			mainGraphic.hideContinueButton();
 			mainGraphic.showsOver();
 			mainGraphic.mode="explore";
 			var uiObj = {values: [mainGraphic.minYear, mainGraphic.minYear],value:mainGraphic.minYear};
@@ -232,6 +233,8 @@ try {
 				$("div.embedCode").fadeIn(200);	
 			}
 		});
+		
+		$("#continueButton").click(mainGraphic.continueButton);
 		
 		mainGraphic.changeSlide(0);
 	});
