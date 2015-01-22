@@ -6,31 +6,51 @@
 <!--<script src="//use.edgefonts.net/source-sans-pro.js"></script>-->
 <script src="//use.typekit.net/hcc1uga.js"></script>
 <script>try{Typekit.load();}catch(e){}</script>
+<script type="text/javascript" src = "angular.min.js"></script>
+<script type="text/javascript" src = "angular-sanitize.min.js"></script>
 <link rel="stylesheet" href="jquery-ui-1.10.3/css/smoothness/jquery-ui-1.10.3.custom.min.css" />
 <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-<div id="outermost" class="tk-myriad-pro-condensed">
-	<div id="slideSelectArea">
-    	<?php 
-		$tabText = array(
-			array("text"=>"Intro","numeral"=>""),
-			array("text"=>"The growth <br />of income inequality","numeral"=>"I"),
-			array("text"=>"Income inequality<br />in dollar terms","numeral"=>"II"),
-			array("text"=>"Intensifying<br />income concentration","numeral"=>"III"),
-			array("text"=>"The role<br />of federal<br />taxes","numeral"=>"IV"),
-			array("text"=>"Explore","numeral"=>"")
-		);
-		for ($i=0;$i<=5;$i++) : ?>
-    	<div id="selectSlide<?php echo $i?>" class="slideSelector <?php echo ($i==0 ? "selected" : "");?>">
+
+<script type="text/javascript">
+
+var cboApp = angular.module('cboApp',['ngSanitize']);
+
+cboApp.controller('tabs',['$scope',function($scope) {
+	$scope.text = [
+		{"text":"Intro","numeral":""},
+		{"text":"The growth <br />of income inequality","numeral":"I"},
+		{"text":"Income inequality<br />in dollar terms","numeral":"II"},
+		{"text":"Intensifying<br />income concentration","numeral":"III"},
+		{"text":"The role<br />of federal<br />taxes","numeral":"IV"},
+		{"text":"Explore","numeral":""}
+	]
+}]);
+
+cboApp.controller('charts',['$scope',function($scope) {
+	$scope.titles = [
+		"",
+		"Percentage change in after tax income since 1979",
+		"Average after-tax income, in 2011 dollars",
+		"Share of after-tax income",
+		"Average share of income owed in federal taxes",
+		"Percentage change in before tax income since 1979",
+		""
+	]
+}]);
+
+</script>
+
+<div id="outermost" class="tk-myriad-pro-condensed" ng-app="cboApp" ng-controller="charts">
+	<div id="slideSelectArea" ng-controller="tabs">
+    	<div ng-repeat="tab in text" id="selectSlide{{$index}}" ng-attr-class="slideSelector {{$index==0 && 'selected' || '' }}">
         	<div class="inner">
-            	<?php if ($i!=5) :?><div class="betweenSelect"><div class="caret"></div></div><?php endif; ?>
-            	<div class="numeral"><?php echo $tabText[$i]["numeral"]; ?></div><div class="text"><?php echo $tabText[$i]["text"]; ?></div>
+            	<div ng-if="$index!=5" class="betweenSelect"><div class="caret"></div></div>
+            	<div class="numeral">{{tab.numeral}}</div><div class="text" ng-bind-html="tab.text"></div>
             </div>
         </div>
-        	
-        <?php endfor; ?>
     </div> <!-- end slideSelectArea -->
     
     <div id="slide0" class="chartSlide">
@@ -41,67 +61,48 @@
             <div class="redButton" id="exploreButton">Explore the data</div>
          </div>
     </div>
-    <?php 
-	$titles = array(
-		"",
-		"Percentage change in after tax income since 1979",
-		"Average after-tax income, in 2011 dollars",
-		"Share of after-tax income",
-		"Average share of income owed in federal taxes",
-		"Percentage change in before tax income since 1979",
-		""
-	);
-	function outputExploreSelector() {
-		global $titles; 
-		$selectOrder = array(1,5,2,3,4);
-		?>
-		<select class="exploreSelector">
-        	<?php for ($i=0;$i<=4;$i++) : ?>
-            <option value="<?php echo $selectOrder[$i];?>"><?php echo $titles[$selectOrder[$i]];?></option>
-            <?php endfor; ?>
-        </select>
-	<?php }; 
-	for ($i=1;$i<=5;$i++) : ?>
-    <div id="slide<?php echo $i; ?>" class="chartSlide">
-    	<?php if ($i==5) outputExploreSelector(); ?>
+	
+	<script type="text/ng-template" id="exploreSelector">
+		<select ng-controller="charts" class="exploreSelector">
+			<option ng-repeat="$i in [1,5,2,3,4]" value="{{$i}}">{{titles[$i]}}</option>
+		</select>
+	</script>
+	
+	
+    <div ng-repeat="$chartNumber in [1,2,3,4,5]" id="slide{{$chartNumber}}" class="chartSlide">
+    	<div ng-if="$chartNumber==5"><div ng-include="'exploreSelector'"></div></div>
     	<div class="slideTextMargin">
         	<div class="chartDesc">
-                <div class="chartDescHeader" id="slide<?php echo $i;?>title">
+                <div class="chartDescHeader" id="slide{{$chartNumber}}title">
                     <div class="animateInner"></div>
                 </div>
                
-                <div class="chartDescBody" id="slide<?php echo $i;?>body"><div class="animateInner"></div></div>
+                <div class="chartDescBody" id="slide{{$chartNumber}}body"><div class="animateInner"></div></div>
             </div>
            
             <div class="sliderContainer">
                 <div class="yearSliderAutoGen">
                 	<div class="hLine"></div>
                 </div>
-            	<div id="slide<?php echo $i;?>slider" class="yearSlider"></div>
+            	<div id="slide{{$chartNumber}}slider" class="yearSlider"></div>
             </div>
             <p>&nbsp;</p>
-            <div class="chartBelowSliderHeader"><strong><?php echo $titles[$i];?></strong></div>
+            <div class="chartBelowSliderHeader"><strong>{{title}}</strong></div>
             <div class="slideCharts">
-                <div id="slide<?php echo $i;?>Canvas" class="leftCanvas"></div>
+                <div id="slide{{$chartNumber}}Canvas" class="leftCanvas"></div>
                 <div class="vertical_divider"><img src="vertical_divider.png" /></div>
-                <div id="slide<?php echo $i;?>RightCanvas" class="rightCanvas"></div>
+                <div id="slide{{$chartNumber}}RightCanvas" class="rightCanvas"></div>
             </div> <!--end slideCharts-->
             
             
            
 	    </div> <!-- end slideTextMargin-->
-    </div> <!--end slide <?php echo $i;?> -->
-    <?php endfor; ?>
-    <!--<div id="slide5" class="chartSlide">
-    <?php outputExploreSelector(); ?>
-    <div class="chartDescBody" id="slide5body">
-    <p>&nbsp;</p>
-    	<p><strong>Explore the data</strong></p>
-    </div>    
-    </div>-->
+    </div> <!--end slide  -->
+   
+  
     <div class="popup">
     	<div class="textDiv"></div>
-        <div class="closePopup" class="redButton">Continue</div>
+        <div class="closePopup redButton">Continue</div>
     </div>
     <div id="playPauseArea">
     	<img src="pause_light.png" />
@@ -125,6 +126,7 @@
     
      
 </div> <!-- end div outermost -->
+
 
 <script type="text/javascript" src = "raphael-min.js"></script>
 <script type="text/javascript" src = "raphael.barchart.js"></script>
